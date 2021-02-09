@@ -1,7 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:p2p_model/components/buttons.dart';
+import 'package:p2p_model/models/pmodel.dart';
+import 'package:p2p_model/models/script.dart';
+import 'package:p2p_model/screens/script_create.dart';
+import 'package:responsive_framework/responsive_wrapper.dart';
+
+import 'models/history.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,16 +19,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      // builder: (context, widget) => ResponsiveWrapper.builder(widget,
-      //     // maxWidth: 1200,
-      //     minWidth: 620,
-      //     defaultScale: true,
-      //     breakpoints: [
-      //       ResponsiveBreakpoint.resize(480, name: MOBILE),
-      //       ResponsiveBreakpoint.autoScale(800, name: TABLET),
-      //       ResponsiveBreakpoint.resize(1000, name: DESKTOP),
-      //     ]
-      // ),
+      builder: (context, widget) => ResponsiveWrapper.builder(widget,
+          // maxWidth: 1200,
+
+          defaultScaleFactor: 1.4
+          // breakpoints: [
+          //   ResponsiveBreakpoint.resize(480, name: MOBILE),
+          //   ResponsiveBreakpoint.autoScale(800, name: TABLET),
+          //   ResponsiveBreakpoint.resize(1000, name: DESKTOP),
+          // ]
+          ),
       theme: ThemeData(brightness: Brightness.dark),
       home: App(),
     );
@@ -31,7 +38,6 @@ class MyApp extends StatelessWidget {
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).size);
     return Scaffold(
       body: Stack(
         children: [
@@ -49,7 +55,16 @@ class App extends StatelessWidget {
                 Expanded(
                     child: Column(
                   children: [
-                    _RowHeader('Сценарії', () {}),
+                    _RowHeader('Сценарії', () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => ScriptCreateScreen()));
+                    }),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    ScriptModelCard(ScriptModel()),
+                    ScriptModelCard(ScriptModel()),
+                    ScriptModelCard(ScriptModel()),
                   ],
                 )),
                 Container(
@@ -60,6 +75,12 @@ class App extends StatelessWidget {
                     child: Column(
                   children: [
                     _RowHeader('Моделі', () {}),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    PModelCard(),
+                    PModelCard(),
+                    PModelCard(),
                   ],
                 )),
                 Container(
@@ -70,6 +91,11 @@ class App extends StatelessWidget {
                     child: Column(
                   children: [
                     _RowHeader('Історія', null),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    HistoryModelCard(),
+                    HistoryModelCard(),
                   ],
                 )),
               ],
@@ -78,14 +104,14 @@ class App extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: 46,
+              height: 42,
               width: 280,
               decoration: BoxDecoration(
                 color: Colors.blueGrey.shade50,
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(10)),
               ),
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(14),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -95,7 +121,7 @@ class App extends StatelessWidget {
                     child: Text(
                       '> відкрити лог',
                       style: GoogleFonts.rubik(
-                          fontSize: 14, color: Colors.blueGrey.shade900),
+                          fontSize: 12, color: Colors.blueGrey.shade900),
                     ),
                   ),
                   ScalableButton(
@@ -106,7 +132,7 @@ class App extends StatelessWidget {
                         Text(
                           '9a1d81b',
                           style: GoogleFonts.rubik(
-                              fontSize: 13, color: Colors.blueGrey.shade700),
+                              fontSize: 12, color: Colors.blueGrey.shade700),
                         ),
                         const SizedBox(
                           width: 6,
@@ -138,7 +164,7 @@ class _RowHeader extends StatelessWidget {
         Container(
           height: 76,
           alignment: Alignment.bottomCenter,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

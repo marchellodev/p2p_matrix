@@ -1,0 +1,54 @@
+{
+  "name": "name",
+  "operations": 100,
+  "nodes_amount": 900,
+  "peers_min": 100,
+  "peers_max": 400,
+  "file_size_min": 100,
+  "file_size_max": 200,
+  "nodes": [
+    {
+      "id": 0,
+      "location": "Sydney",
+      "speed": 12.2
+    },
+    {
+      "id": 1,
+      "location": "Kyiv",
+      "speed": 6.2
+    }
+  ],
+  "files": [
+    {
+      "id": 0,
+      "size": 10
+    }
+  ],
+  "story": [
+    {
+      "time": 0,
+      "node_actions": [
+        {
+          "type": "on",
+          "node": 0
+        },
+        {
+          "type": "off",
+          "node": 1
+        }
+      ],
+      "operations": [
+        {
+          "type": "write",
+          "node": 0,
+          "file": 1
+        },
+        {
+          "type": "read",
+          "node": 1,
+          "file": 0
+        }
+      ]
+    }
+  ]
+}
