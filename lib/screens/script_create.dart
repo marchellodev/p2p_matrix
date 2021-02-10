@@ -2,17 +2,39 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:p2p_model/components/buttons.dart';
+import 'package:p2p_model/models/pings.dart';
+import 'package:p2p_model/models/script.dart';
 
-class ScriptCreateScreen extends StatelessWidget {
+class ScriptCreateScreen extends StatefulWidget {
+  @override
+  _ScriptCreateScreenState createState() => _ScriptCreateScreenState();
+}
+
+class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
+  final TextEditingController name = TextEditingController();
+
+  final TextEditingController operations = TextEditingController();
+
+  final TextEditingController nodesAmount = TextEditingController();
+
+  final TextEditingController peersMin = TextEditingController();
+
+  final TextEditingController peersMax = TextEditingController();
+
+  final TextEditingController fileSizeMin = TextEditingController();
+
+  final TextEditingController fileSizeMax = TextEditingController();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
+
+  bool loading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.blueGrey.shade900, Colors.blueGrey.shade800])),
+                begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.blueGrey.shade900, Colors.blueGrey.shade800])),
         child: Column(
           children: [
             Container(
@@ -58,21 +80,20 @@ class ScriptCreateScreen extends StatelessWidget {
                 children: [
                   Expanded(
                       child: TextField(
+                          controller: operations,
                           keyboardType: TextInputType.number,
                           style: GoogleFonts.rubik(fontSize: 12),
-                          decoration: const InputDecoration(
-                              labelText: 'Кількість операцій (читання/запису)',
-                              border: OutlineInputBorder()))),
+                          decoration:
+                              const InputDecoration(labelText: 'Кількість операцій (читання/запису)', border: OutlineInputBorder()))),
                   const SizedBox(
                     width: 26,
                   ),
                   Expanded(
                       child: TextField(
+                          controller: nodesAmount,
                           keyboardType: TextInputType.number,
                           style: GoogleFonts.rubik(fontSize: 12),
-                          decoration: const InputDecoration(
-                              labelText: 'Кількість вузлів',
-                              border: OutlineInputBorder()))),
+                          decoration: const InputDecoration(labelText: 'Кількість вузлів', border: OutlineInputBorder()))),
                 ],
               ),
             ),
@@ -85,21 +106,21 @@ class ScriptCreateScreen extends StatelessWidget {
                 children: [
                   Expanded(
                       child: TextField(
+                          controller: peersMin,
                           keyboardType: TextInputType.number,
                           style: GoogleFonts.rubik(fontSize: 12),
-                          decoration: const InputDecoration(
-                              labelText: 'Мінімальна кількість пірів в мережі',
-                              border: OutlineInputBorder()))),
+                          decoration:
+                              const InputDecoration(labelText: 'Мінімальна кількість пірів в мережі', border: OutlineInputBorder()))),
                   const SizedBox(
                     width: 26,
                   ),
                   Expanded(
                       child: TextField(
+                          controller: peersMax,
                           keyboardType: TextInputType.number,
                           style: GoogleFonts.rubik(fontSize: 12),
-                          decoration: const InputDecoration(
-                              labelText: 'Максимальна кількість пірів в мережі',
-                              border: OutlineInputBorder()))),
+                          decoration:
+                              const InputDecoration(labelText: 'Максимальна кількість пірів в мережі', border: OutlineInputBorder()))),
                 ],
               ),
             ),
@@ -112,21 +133,19 @@ class ScriptCreateScreen extends StatelessWidget {
                 children: [
                   Expanded(
                       child: TextField(
+                          controller: fileSizeMin,
                           keyboardType: TextInputType.number,
                           style: GoogleFonts.rubik(fontSize: 12),
-                          decoration: const InputDecoration(
-                              labelText: 'Мінімальний розмір файлу (МБ)',
-                              border: OutlineInputBorder()))),
+                          decoration: const InputDecoration(labelText: 'Мінімальний розмір файлу (МБ)', border: OutlineInputBorder()))),
                   const SizedBox(
                     width: 26,
                   ),
                   Expanded(
                       child: TextField(
+                          controller: fileSizeMax,
                           keyboardType: TextInputType.number,
                           style: GoogleFonts.rubik(fontSize: 12),
-                          decoration: const InputDecoration(
-                              labelText: 'Максимальний розмір файлу (МБ)',
-                              border: OutlineInputBorder()))),
+                          decoration: const InputDecoration(labelText: 'Максимальний розмір файлу (МБ)', border: OutlineInputBorder()))),
                 ],
               ),
             ),
@@ -139,30 +158,53 @@ class ScriptCreateScreen extends StatelessWidget {
                 children: [
                   Expanded(
                       child: TextField(
+                          controller: name,
                           keyboardType: TextInputType.number,
                           style: GoogleFonts.rubik(fontSize: 12),
-                          decoration: const InputDecoration(
-                              labelText: 'Назва сценарію',
-                              border: OutlineInputBorder()))),
+                          decoration: const InputDecoration(labelText: 'Назва сценарію', border: OutlineInputBorder()))),
                   const SizedBox(
                     width: 26,
                   ),
                   Expanded(
                       child: ScalableButton(
                     scale: ScaleFormat.small,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                    onPressed: loading
+                        ? null
+                        : () async {
+                            Dialogs.showLoadingDialog(context, _keyLoader); //invoking login
+
+                            () {
+                              // final model = ScriptModel(
+                              //     name: name.text,
+                              //     operations: int.parse(operations.text),
+                              //     nodesAmount: int.parse(nodesAmount.text),
+                              //     peersMin: int.parse(peersMin.text),
+                              //     peersMax: int.parse(peersMax.text),
+                              //     fileSizeMin: int.parse(fileSizeMin.text),
+                              //     fileSizeMax: int.parse(fileSizeMax.text),
+                              //     nodes: nodes,
+                              //     files: files,
+                              //     story: story);
+
+                              // print(model.toJson());
+
+                              // final list = List.generate(285, (index) => index+1).join(',');
+                              // print('https://wondernetwork.com/ping-data?sources=$list&destinations=$list');
+
+                              LocationPings.getLocationPings(context);
+                            }.call();
+                            await Future.delayed(Duration(seconds: 2));
+                            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop(); //close the dialoge
+
+                            Navigator.pop(context);
+                          },
                     child: Container(
-                      padding: EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                          color: Colors.cyan.shade700,
-                          borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(color: Colors.cyan.shade700, borderRadius: BorderRadius.circular(12)),
                       child: Center(
                         child: Text(
                           'Зегенерувати',
-                          style:
-                              GoogleFonts.rubik(color: Colors.blueGrey.shade50),
+                          style: GoogleFonts.rubik(color: Colors.blueGrey.shade50),
                         ),
                       ),
                     ),
@@ -174,5 +216,24 @@ class ScriptCreateScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class Dialogs {
+  static Future<void> showLoadingDialog(BuildContext context, GlobalKey key) async {
+    return showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return WillPopScope(
+              onWillPop: () async => false,
+              child: SimpleDialog(key: key, children: <Widget>[
+                Center(
+                  child: Column(children: const [
+                    CircularProgressIndicator(),
+                  ]),
+                )
+              ]));
+        });
   }
 }

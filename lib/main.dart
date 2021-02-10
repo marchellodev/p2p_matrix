@@ -62,9 +62,9 @@ class App extends StatelessWidget {
                     const SizedBox(
                       height: 12,
                     ),
-                    ScriptModelCard(ScriptModel()),
-                    ScriptModelCard(ScriptModel()),
-                    ScriptModelCard(ScriptModel()),
+                    ScriptModelCard(),
+                    ScriptModelCard(),
+                    ScriptModelCard(),
                   ],
                 )),
                 Container(
