@@ -28,6 +28,9 @@ ScriptModel _$ScriptModelFromJson(Map<String, dynamic> json) {
             ? null
             : ScriptStoryElement.fromJson(e as Map<String, dynamic>))
         ?.toList(),
+    pings: json['pings'] == null
+        ? null
+        : Pings.fromJson(json['pings'] as Map<String, dynamic>),
   );
 }
 
@@ -45,6 +48,7 @@ Map<String, dynamic> _$ScriptModelToJson(ScriptModel instance) =>
       'files':
           instance.files?.map((k, e) => MapEntry(k.toString(), e?.toJson())),
       'story': instance.story?.map((e) => e?.toJson())?.toList(),
+      'pings': instance.pings?.toJson(),
     };
 
 ScriptNode _$ScriptNodeFromJson(Map<String, dynamic> json) {

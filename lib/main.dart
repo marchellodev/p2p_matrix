@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -53,6 +56,17 @@ class _AppLoaderState extends State<AppLoader> {
       setState(() {
         loaded = true;
       });
+
+      // final files = ;
+      //
+      // files.listen((event) async {
+      //   if (event.path.split('.').last == 'json') {
+      //     print(event.path);
+      //     final f = await File(event.path).readAsString();
+      //     scripts
+      //         .add(ScriptModel.fromJson(jsonDecode(f) as Map<String, dynamic>));
+      //   }
+      // });
     }.call();
     super.initState();
   }
@@ -69,9 +83,38 @@ class _AppLoaderState extends State<AppLoader> {
   }
 }
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
+  @override
+  _AppState createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  List<ScriptModel> scripts = <ScriptModel>[];
+
+  void loadScripts() {
+    final files = Directory('storage').list();
+    scripts = [];
+    files.listen((event) async {
+      if (event.path.split('.').last == 'json') {
+        print(event.path);
+        final f = await File(event.path).readAsString();
+        setState(() {
+          scripts
+              .add(ScriptModel.fromJson(jsonDecode(f) as Map<String, dynamic>));
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    loadScripts();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(scripts.length);
     return Scaffold(
       body: Stack(
         children: [
@@ -89,16 +132,23 @@ class App extends StatelessWidget {
                 Expanded(
                     child: Column(
                   children: [
-                    _RowHeader('Сценарії', () {
-                      Navigator.of(context).push(MaterialPageRoute(
+                    _RowHeader('Сценарії', () async {
+                      await Navigator.of(context).push(MaterialPageRoute(
                           builder: (_) => ScriptCreateScreen()));
+                      loadScripts();
                     }),
                     const SizedBox(
                       height: 12,
                     ),
-                    ScriptModelCard(),
-                    ScriptModelCard(),
-                    ScriptModelCard(),
+                    Expanded(
+                        child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: scripts.length,
+                      itemBuilder: (ctx, el) => ScriptModelCard(scripts[el], (){
+                        File('storage/${scripts[el].name}.json').deleteSync();
+                        loadScripts();
+                      }),
+                    ))
                   ],
                 )),
                 Container(

@@ -1,8 +1,11 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:p2p_model/models/pings.dart';
 
 import '../components/buttons.dart';
 
@@ -20,6 +23,7 @@ class ScriptModel {
   final Map<int, ScriptNode> nodes;
   final Map<int, ScriptFile> files;
   final List<ScriptStoryElement> story;
+  final Pings pings;
 
   const ScriptModel(
       {@required this.name,
@@ -31,7 +35,8 @@ class ScriptModel {
       @required this.fileSizeMax,
       @required this.nodes,
       @required this.files,
-      @required this.story});
+      @required this.story,
+      @required this.pings});
 
   static Map<int, ScriptNode> genNodes(int max) {
     final result = <int, ScriptNode>{};
@@ -55,11 +60,102 @@ class ScriptModel {
     return result;
   }
 
-  static List<ScriptStoryElement> genStory(int nodes) {
+  // todo check nodesMin, nodesMax, nodes whether they make sense
+  static List<ScriptStoryElement> genStory(
+      int nodes, int actions, int nodesMin, int nodesMax) {
     final maxFiles = nodes ~/ 2;
+    final story = <ScriptStoryElement>[];
+    final filesInTheNetwork = <int>[];
+    final nodesTurnedOn = <int>[];
+    // nodes: from 1 to nodes
 
+    final rand = Random();
+// todo no need to create a list, just use random
+
+    // bootstrap
+    while (nodesTurnedOn.length < nodesMin) {
+      final randomNode = rand.nextInt(nodes - 1) + 1;
+      if (!nodesTurnedOn.contains(randomNode)) {
+        nodesTurnedOn.add(randomNode);
+      }
+    }
+
+    story.add(ScriptStoryElement(nodeActions: {
+      for (var el in nodesTurnedOn) el: ScriptElementNodeAction.on
+    }, operations: {}));
+
+    // generating the story itself
+    for (var i = 0; i < actions ~/ 5; i++) {
+      final nodeActions = <int, ScriptElementNodeAction>{};
+      final nodeOperations = <int, ScriptElementOperation>{};
+
+      // for (var i = 1; i <= nodes; i++) {
+      //   if (rand.nextDouble() > 0.01) {
+      //
+      //     nodeActions[i] = ScriptElementNodeAction.on;
+      //   }
+      //
+      //   if (rand.nextDouble() > 0.0008) {
+      //     nodeActions[i] = ScriptElementNodeAction.off;
+      //   }
+      // }
+
+      final newNodes = nodesMin + rand.nextInt(nodesMax - nodesMin);
+
+      while (nodesTurnedOn.length > newNodes) {
+        nodesTurnedOn.shuffle();
+        nodeActions[nodesTurnedOn[0]] = ScriptElementNodeAction.off;
+        nodesTurnedOn.remove(nodesTurnedOn[0]);
+      }
+
+      while (nodesTurnedOn.length < newNodes) {
+        final randomNode = rand.nextInt(nodes - 1) + 1;
+        if (!nodesTurnedOn.contains(randomNode)) {
+          nodesTurnedOn.add(randomNode);
+          nodeActions[randomNode] = ScriptElementNodeAction.on;
+        }
+      }
+
+      for (var i = 0; i < rand.nextInt(4) + 1; i++) {
+        if (rand.nextDouble() > 0.5 || filesInTheNetwork.isEmpty) {
+          final file = rand.nextInt(maxFiles - 1) + 1;
+          nodesTurnedOn.shuffle(rand);
+          final node = nodesTurnedOn.first;
+          if (!nodeOperations.keys.contains(node)) {
+            nodeOperations[node] = ScriptElementOperation(
+                type: ScriptElementOperationType.write, fileId: file);
+          }
+        } else {
+          filesInTheNetwork.shuffle(rand);
+          final file = filesInTheNetwork.first;
+          nodesTurnedOn.shuffle();
+          final node = nodesTurnedOn[0];
+          nodeOperations[node] = ScriptElementOperation(
+              type: ScriptElementOperationType.read, fileId: file);
+        }
+      }
+      // var operation;
+      // if (filesInTheNetwork.isEmpty) {
+      //   final id = rand.nextInt(maxFiles - 1) + 1;
+      //   // operation = {id: ScriptElementOperation.};
+      // }
+
+      story.add(ScriptStoryElement(
+          nodeActions: nodeActions, operations: nodeOperations));
+    }
+
+    return story;
+    /*
+    LOL
+
+    allright, here are the chances:
+    node turns on: max(1-(turned_on / all), 0.3) (10/100)
+    node turns off: max(1-(turned_off / all), 0.2)
+    file_write: 0.1
+    file_read: 0.05
+
+     */
     // here we generate the story lol
-
   }
 
   factory ScriptModel.fromJson(Map<String, dynamic> json) =>
@@ -149,9 +245,10 @@ class ScriptElementOperation {
 enum ScriptElementOperationType { read, write }
 
 class ScriptModelCard extends StatelessWidget {
-  // final ScriptModel model;
-  //
-  // const ScriptModelCard(this.model);
+  final ScriptModel model;
+  final Function() onRemove;
+
+  const ScriptModelCard(this.model, this.onRemove);
 
   @override
   Widget build(BuildContext context) {
@@ -168,13 +265,15 @@ class ScriptModelCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                'сценарій_13',
+                model.name,
                 style: GoogleFonts.rubik(
                     color: Colors.blueGrey.shade800, fontSize: 12),
               ),
               const Spacer(),
               ScalableButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Process.run('explorer.exe', ['storage']);
+                  },
                   scale: ScaleFormat.big,
                   child: Container(
                     decoration: BoxDecoration(
@@ -184,14 +283,14 @@ class ScriptModelCard extends StatelessWidget {
                             width: 1.2)),
                     padding: const EdgeInsets.all(3.2),
                     child: Icon(
-                      Icons.edit_outlined,
+                      Icons.folder_open,
                       size: 11,
                       color: Colors.blueGrey.shade900,
                     ),
                   )),
               const SizedBox(width: 4),
               ScalableButton(
-                  onPressed: () {},
+                  onPressed: onRemove,
                   scale: ScaleFormat.big,
                   child: Container(
                     decoration: BoxDecoration(
@@ -210,7 +309,7 @@ class ScriptModelCard extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            '6 000 операцій • 500 вузлів',
+            '${NumberFormat('#,##0').format(model?.operations ?? 0).replaceAll(',', ' ')} операцій • ${NumberFormat('#,##0').format(model?.nodesAmount ?? 0).replaceAll(',', ' ')} вузлів',
             style: GoogleFonts.rubik(
                 fontSize: 10, color: Colors.blueGrey.shade700),
           )

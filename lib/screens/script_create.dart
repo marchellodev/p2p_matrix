@@ -1,9 +1,14 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:p2p_model/components/buttons.dart';
 import 'package:p2p_model/models/script.dart';
+
+import '../main.dart';
 
 class ScriptCreateScreen extends StatefulWidget {
   @override
@@ -216,33 +221,45 @@ class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
                             Dialogs.showLoadingDialog(
                                 context, _keyLoader); //invoking login
 
-                            () {
-                              final nodes = ScriptModel.genNodes(
-                                  int.parse(nodesAmount.text));
+                            await Future.delayed(
+                                const Duration(milliseconds: 500));
+                            final nodes = ScriptModel.genNodes(
+                                int.parse(nodesAmount.text));
 
-                              final files = ScriptModel.genFiles(
-                                  int.parse(nodesAmount.text),
-                                  double.parse(fileSizeMin.text),
-                                  double.parse(fileSizeMax.text));
+                            final files = ScriptModel.genFiles(
+                                int.parse(nodesAmount.text),
+                                double.parse(fileSizeMin.text),
+                                double.parse(fileSizeMax.text));
 
-                              final model = ScriptModel(
-                                  name: name.text,
-                                  operations: int.parse(operations.text),
-                                  nodesAmount: int.parse(nodesAmount.text),
-                                  peersMin: int.parse(peersMin.text),
-                                  peersMax: int.parse(peersMax.text),
-                                  fileSizeMin: int.parse(fileSizeMin.text),
-                                  fileSizeMax: int.parse(fileSizeMax.text),
-                                  nodes: nodes,
-                                  files: files,
-                                  story: []);
+                            final story = ScriptModel.genStory(
+                                int.parse(nodesAmount.text),
+                                int.parse(operations.text),
+                                int.parse(peersMin.text),
+                                int.parse(peersMax.text));
 
-                              print(model.toJson());
-                            }.call();
-                            await Future.delayed(Duration(seconds: 2));
+                            final model = ScriptModel(
+                                name: name.text,
+                                operations: int.parse(operations.text),
+                                nodesAmount: int.parse(nodesAmount.text),
+                                peersMin: int.parse(peersMin.text),
+                                peersMax: int.parse(peersMax.text),
+                                fileSizeMin: int.parse(fileSizeMin.text),
+                                fileSizeMax: int.parse(fileSizeMax.text),
+                                nodes: nodes,
+                                files: files,
+                                story: story,
+                                pings: pings);
+
+                            await File('storage/${model.name}.json')
+                                .create(recursive: true);
+                            await File('storage/${model.name}.json')
+                                .writeAsString(jsonEncode(model.toJson()));
+
+                            await Future.delayed(
+                                const Duration(milliseconds: 500));
                             Navigator.of(_keyLoader.currentContext,
                                     rootNavigator: true)
-                                .pop(); //close the dialoge
+                                .pop();
 
                             Navigator.pop(context);
                           },
