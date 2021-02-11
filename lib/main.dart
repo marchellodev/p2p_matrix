@@ -20,14 +20,23 @@ import 'models/pings.dart';
 Pings pings;
 
 void main() {
-  runZonedGuarded<Widget>(() => MyApp(), (error, stackTrace) {
-    llog('-- ERROR -- ');
+  WidgetsFlutterBinding.ensureInitialized(); //imp line need to be added first
+  FlutterError.onError = (FlutterErrorDetails details) {
+    llog('-- ERROR 2 -- ');
 
-    llog(error.toString());
-    llog(stackTrace.toString());
+    llog(details.exception.toString());
+    llog(details.stack.toString());
+  };
+
+  runZoned(() async {
+    runApp(MyApp()); // starting point of app
+  }, onError: (error, stackTrace) {
+      llog('-- ERROR -- ');
+
+      llog(error.toString());
+      llog(stackTrace.toString());
   });
 
-  // runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
