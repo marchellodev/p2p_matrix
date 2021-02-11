@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -17,7 +19,7 @@ class ScriptModel {
   final int fileSizeMax;
   final Map<int, ScriptNode> nodes;
   final Map<int, ScriptFile> files;
-  final Map<int, ScriptStoryElement> story;
+  final List<ScriptStoryElement> story;
 
   const ScriptModel(
       {@required this.name,
@@ -31,19 +33,45 @@ class ScriptModel {
       @required this.files,
       @required this.story});
 
-  factory ScriptModel.fromJson(Map<String, dynamic> json) => _$ScriptModelFromJson(json);
+  static Map<int, ScriptNode> genNodes(int max) {
+    final result = <int, ScriptNode>{};
+
+    final rand = Random();
+    for (var i = 1; i <= max; i++) {
+      result[i] = ScriptNode.gen(rand);
+    }
+
+    return result;
+  }
+
+  static Map<int, ScriptFile> genFiles(int nodes, double min, double max) {
+    final result = <int, ScriptFile>{};
+
+    final rand = Random();
+    for (var i = 1; i <= nodes ~/ 2; i++) {
+      result[i] = ScriptFile.gen(rand, min, max);
+    }
+
+    return result;
+  }
+
+  static List<ScriptStoryElement> genStory(int nodes) {
+    final maxFiles = nodes ~/ 2;
+
+    // here we generate the story lol
+
+  }
+
+  factory ScriptModel.fromJson(Map<String, dynamic> json) =>
+      _$ScriptModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$ScriptModelToJson(this);
-}
-
-class ScriptNodeLocation {
-  // String
 }
 
 @JsonSerializable(explicitToJson: true)
 class ScriptNode {
   // todo maybe use an enum ?
-  final String location;
+  final int location;
   final double speed;
 
   const ScriptNode({
@@ -51,15 +79,17 @@ class ScriptNode {
     @required this.speed,
   });
 
-  factory ScriptNode.fromJson(Map<String, dynamic> json) => _$ScriptNodeFromJson(json);
+  factory ScriptNode.fromJson(Map<String, dynamic> json) =>
+      _$ScriptNodeFromJson(json);
 
   Map<String, dynamic> toJson() => _$ScriptNodeToJson(this);
 
-
-  static List<ScriptNode> gen(List<String> cities){
-
+  static ScriptNode gen(Random rand) {
+    return ScriptNode(
+        location: rand.nextInt(285 + 1),
+        speed: double.parse(
+            (rand.nextDouble() * (5 - 0.5) + 0.5).toStringAsFixed(4)));
   }
-
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -70,7 +100,14 @@ class ScriptFile {
     @required this.size,
   });
 
-  factory ScriptFile.fromJson(Map<String, dynamic> json) => _$ScriptFileFromJson(json);
+  static ScriptFile gen(Random rand, double min, double max) {
+    return ScriptFile(
+        size: double.parse(
+            (rand.nextDouble() * (max - min) + min).toStringAsFixed(4)));
+  }
+
+  factory ScriptFile.fromJson(Map<String, dynamic> json) =>
+      _$ScriptFileFromJson(json);
 
   Map<String, dynamic> toJson() => _$ScriptFileToJson(this);
 }
@@ -85,7 +122,8 @@ class ScriptStoryElement {
     @required this.operations,
   });
 
-  factory ScriptStoryElement.fromJson(Map<String, dynamic> json) => _$ScriptStoryElementFromJson(json);
+  factory ScriptStoryElement.fromJson(Map<String, dynamic> json) =>
+      _$ScriptStoryElementFromJson(json);
 
   Map<String, dynamic> toJson() => _$ScriptStoryElementToJson(this);
 }
@@ -102,7 +140,8 @@ class ScriptElementOperation {
     @required this.type,
   });
 
-  factory ScriptElementOperation.fromJson(Map<String, dynamic> json) => _$ScriptElementOperationFromJson(json);
+  factory ScriptElementOperation.fromJson(Map<String, dynamic> json) =>
+      _$ScriptElementOperationFromJson(json);
 
   Map<String, dynamic> toJson() => _$ScriptElementOperationToJson(this);
 }
@@ -118,7 +157,9 @@ class ScriptModelCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      decoration: BoxDecoration(color: Colors.blueGrey.shade100, borderRadius: BorderRadius.circular(6)),
+      decoration: BoxDecoration(
+          color: Colors.blueGrey.shade100,
+          borderRadius: BorderRadius.circular(6)),
       margin: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
       padding: const EdgeInsets.all(8),
       child: Column(
@@ -128,7 +169,8 @@ class ScriptModelCard extends StatelessWidget {
             children: [
               Text(
                 'сценарій_13',
-                style: GoogleFonts.rubik(color: Colors.blueGrey.shade800, fontSize: 12),
+                style: GoogleFonts.rubik(
+                    color: Colors.blueGrey.shade800, fontSize: 12),
               ),
               const Spacer(),
               ScalableButton(
@@ -136,7 +178,10 @@ class ScriptModelCard extends StatelessWidget {
                   scale: ScaleFormat.big,
                   child: Container(
                     decoration: BoxDecoration(
-                        shape: BoxShape.circle, border: Border.all(color: Colors.blueGrey.shade500.withOpacity(0.6), width: 1.2)),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            color: Colors.blueGrey.shade500.withOpacity(0.6),
+                            width: 1.2)),
                     padding: const EdgeInsets.all(3.2),
                     child: Icon(
                       Icons.edit_outlined,
@@ -150,7 +195,10 @@ class ScriptModelCard extends StatelessWidget {
                   scale: ScaleFormat.big,
                   child: Container(
                     decoration: BoxDecoration(
-                        shape: BoxShape.circle, border: Border.all(color: Colors.blueGrey.shade500.withOpacity(0.6), width: 1.2)),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            color: Colors.blueGrey.shade500.withOpacity(0.6),
+                            width: 1.2)),
                     padding: const EdgeInsets.all(3.2),
                     child: Icon(
                       Icons.delete_outline,
@@ -163,7 +211,8 @@ class ScriptModelCard extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             '6 000 операцій • 500 вузлів',
-            style: GoogleFonts.rubik(fontSize: 10, color: Colors.blueGrey.shade700),
+            style: GoogleFonts.rubik(
+                fontSize: 10, color: Colors.blueGrey.shade700),
           )
         ],
       ),

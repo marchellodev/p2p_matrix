@@ -9,6 +9,9 @@ import 'package:p2p_model/screens/script_create.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 
 import 'models/history.dart';
+import 'models/pings.dart';
+
+Pings pings;
 
 void main() {
   runApp(MyApp());
@@ -30,8 +33,39 @@ class MyApp extends StatelessWidget {
           // ]
           ),
       theme: ThemeData(brightness: Brightness.dark),
-      home: App(),
+      home: AppLoader(),
     );
+  }
+}
+
+class AppLoader extends StatefulWidget {
+  @override
+  _AppLoaderState createState() => _AppLoaderState();
+}
+
+class _AppLoaderState extends State<AppLoader> {
+  bool loaded = false;
+
+  @override
+  void initState() {
+    () async {
+      pings = await Pings.loadFromAssets(context);
+      setState(() {
+        loaded = true;
+      });
+    }.call();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (loaded) {
+      return App();
+    } else {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
   }
 }
 
