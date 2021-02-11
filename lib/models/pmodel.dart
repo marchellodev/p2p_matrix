@@ -1,10 +1,54 @@
+import 'dart:ffi';
+import 'dart:io';
+
+import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import 'package:p2p_model/components/buttons.dart';
 
-class PModel {}
+part 'pmodel.g.dart';
+
+typedef StringFunction = Pointer<Utf8> Function();
+
+@HiveType(typeId: 1)
+class PModel {
+  @HiveField(0)
+  final String path;
+
+  @HiveField(1)
+  final double size;
+
+  @HiveField(2)
+  final DateTime lastModified;
+
+  DynamicLibrary _lib;
+  StringFunction getName;
+
+  PModel({
+    @required this.path,
+    @required this.size,
+    @required this.lastModified,
+  }) {
+    _lib = DynamicLibrary.open(path);
+    getName = _lib.lookup<NativeFunction<StringFunction>>('GetModelName').asFunction<StringFunction>();
+  }
+
+  void load() {
+
+    print(getName().toDartString());
+
+    // lib.lookupFunction<Pointer<Utf8> Function(), void Function()>('GetName').call();
+  }
+}
 
 class PModelCard extends StatelessWidget {
+  final PModel model;
+  final Function() remove;
+
+  const PModelCard(this.model, this.remove);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -20,13 +64,15 @@ class PModelCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                'модель_1',
+                '${model.getName().toDartString()}',
                 style: GoogleFonts.rubik(
                     color: Colors.blueGrey.shade800, fontSize: 12),
               ),
               const Spacer(),
               ScalableButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    model.load();
+                  },
                   scale: ScaleFormat.big,
                   child: Container(
                     decoration: BoxDecoration(
@@ -43,7 +89,27 @@ class PModelCard extends StatelessWidget {
                   )),
               const SizedBox(width: 4),
               ScalableButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Process.run('explorer.exe',
+                        [(model.path.split('\\')..removeLast()).join('\\')]);
+                  },
+                  scale: ScaleFormat.big,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            color: Colors.blueGrey.shade500.withOpacity(0.6),
+                            width: 1.2)),
+                    padding: const EdgeInsets.all(3.2),
+                    child: Icon(
+                      Icons.folder_open,
+                      size: 11,
+                      color: Colors.blueGrey.shade900,
+                    ),
+                  )),
+              const SizedBox(width: 4),
+              ScalableButton(
+                  onPressed: remove,
                   scale: ScaleFormat.big,
                   child: Container(
                     decoration: BoxDecoration(
@@ -62,7 +128,7 @@ class PModelCard extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            '14/01/2021 • 12.9 Mb',
+            '${DateFormat('yyyy-MM-dd').format(model.lastModified)} • ${NumberFormat('#,##0.##').format(model.size ?? 0).replaceAll(',', ' ')} Mb',
             style: GoogleFonts.rubik(
                 fontSize: 10, color: Colors.blueGrey.shade700),
           )

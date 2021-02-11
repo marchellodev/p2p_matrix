@@ -8,6 +8,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:p2p_model/models/pings.dart';
 
 import '../components/buttons.dart';
+import '../log.dart';
 
 part 'script.g.dart';
 
@@ -290,7 +291,11 @@ class ScriptModelCard extends StatelessWidget {
                   )),
               const SizedBox(width: 4),
               ScalableButton(
-                  onPressed: onRemove,
+                  onPressed: () {
+                    onRemove();
+
+                    llog('Removed script ${model.name}.json');
+                  },
                   scale: ScaleFormat.big,
                   child: Container(
                     decoration: BoxDecoration(

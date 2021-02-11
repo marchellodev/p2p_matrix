@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:p2p_model/components/buttons.dart';
 import 'package:p2p_model/models/script.dart';
 
+import '../log.dart';
 import '../main.dart';
 
 class ScriptCreateScreen extends StatefulWidget {
@@ -218,8 +219,9 @@ class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
                                 fileSizeMax.text.isEmpty) {
                               return;
                             }
+                            llog('Started generating script ${name.text}');
                             Dialogs.showLoadingDialog(
-                                context, _keyLoader); //invoking login
+                                context, _keyLoader);
 
                             await Future.delayed(
                                 const Duration(milliseconds: 500));
@@ -262,7 +264,9 @@ class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
                                 .pop();
 
                             Navigator.pop(context);
-                          },
+                            llog('Finished generating script ${name.text}');
+
+                    },
                     child: Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(

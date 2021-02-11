@@ -1,23 +1,33 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 import 'package:p2p_model/components/buttons.dart';
+import 'package:p2p_model/log.dart';
 import 'package:p2p_model/models/pmodel.dart';
 import 'package:p2p_model/models/script.dart';
 import 'package:p2p_model/screens/script_create.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 
-import 'models/history.dart';
 import 'models/pings.dart';
 
 Pings pings;
 
 void main() {
-  runApp(MyApp());
+  runZonedGuarded<Widget>(() => MyApp(), (error, stackTrace) {
+    llog('-- ERROR -- ');
+
+    llog(error.toString());
+    llog(stackTrace.toString());
+  });
+
+  // runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -52,7 +62,16 @@ class _AppLoaderState extends State<AppLoader> {
   @override
   void initState() {
     () async {
+      Hive.init('storage');
+      Hive.registerAdapter(PModelAdapter());
+      await Hive.openBox<PModel>('models');
+
       pings = await Pings.loadFromAssets(context);
+
+      File('storage/log.txt').create(recursive: true);
+
+      llog('App has launched');
+
       setState(() {
         loaded = true;
       });
@@ -90,6 +109,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   List<ScriptModel> scripts = <ScriptModel>[];
+  List<PModel> models = <PModel>[];
 
   void loadScripts() {
     final files = Directory('storage').list();
@@ -106,9 +126,16 @@ class _AppState extends State<App> {
     });
   }
 
+  void loadModels() {
+    setState(() {
+      models = Hive.box<PModel>('models').values.toList();
+    });
+  }
+
   @override
   void initState() {
     loadScripts();
+    loadModels();
     super.initState();
   }
 
@@ -144,7 +171,8 @@ class _AppState extends State<App> {
                         child: ListView.builder(
                       physics: const BouncingScrollPhysics(),
                       itemCount: scripts.length,
-                      itemBuilder: (ctx, el) => ScriptModelCard(scripts[el], (){
+                      itemBuilder: (ctx, el) =>
+                          ScriptModelCard(scripts[el], () {
                         File('storage/${scripts[el].name}.json').deleteSync();
                         loadScripts();
                       }),
@@ -158,13 +186,32 @@ class _AppState extends State<App> {
                 Expanded(
                     child: Column(
                   children: [
-                    _RowHeader('Моделі', () {}),
+                    _RowHeader('Моделі', () async {
+                      final typeGroup = XTypeGroup(extensions: ['dll']);
+                      final file =
+                          await openFile(acceptedTypeGroups: [typeGroup]);
+
+                      Hive.box<PModel>('models').add(PModel(
+                          path: file.path,
+                          lastModified: await file.lastModified(),
+                          size: double.parse((await file.length() / 1000000)
+                              .toStringAsFixed(4))));
+
+                      loadModels();
+                    }),
                     const SizedBox(
                       height: 12,
                     ),
-                    PModelCard(),
-                    PModelCard(),
-                    PModelCard(),
+                    Expanded(
+                        child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: models.length,
+                      itemBuilder: (ctx, el) =>
+                          PModelCard(models[el], () async {
+                        await Hive.box<PModel>('models').deleteAt(el);
+                        loadModels();
+                      }),
+                    ))
                   ],
                 )),
                 Container(
@@ -174,12 +221,12 @@ class _AppState extends State<App> {
                 Expanded(
                     child: Column(
                   children: [
-                    _RowHeader('Історія', null),
+                    const _RowHeader('Історія', null),
                     const SizedBox(
                       height: 12,
                     ),
-                    HistoryModelCard(),
-                    HistoryModelCard(),
+                    // HistoryModelCard(),
+                    // HistoryModelCard(),
                   ],
                 )),
               ],
@@ -201,7 +248,9 @@ class _AppState extends State<App> {
                 children: [
                   ScalableButton(
                     scale: ScaleFormat.big,
-                    onPressed: () {},
+                    onPressed: () {
+                      Process.run('explorer.exe', ['storage\\log.txt']);
+                    },
                     child: Text(
                       '> відкрити лог',
                       style: GoogleFonts.rubik(
