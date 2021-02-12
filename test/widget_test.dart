@@ -7,7 +7,7 @@
 
 import 'package:test/test.dart';
 
-import 'package:p2p_model/models/script.dart';
+import 'package:p2p_matrix/models/script.dart';
 
 void main() {
   test('storyGenTest', () async {

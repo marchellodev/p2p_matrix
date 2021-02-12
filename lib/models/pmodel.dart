@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
-import 'package:p2p_model/components/buttons.dart';
+import 'package:p2p_matrix/components/buttons.dart';
 
 part 'pmodel.g.dart';
 
@@ -64,7 +64,7 @@ class PModelCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                '${model.getName().toDartString()}',
+                model.getName().toDartString(),
                 style: GoogleFonts.rubik(
                     color: Colors.blueGrey.shade800, fontSize: 12),
               ),

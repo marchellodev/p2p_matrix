@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
-project(p2p_model LANGUAGES CXX)
+project(p2p_matrix LANGUAGES CXX)
 
-set(BINARY_NAME "p2p_model")
+set(BINARY_NAME "p2p_matrix")
 
 cmake_policy(SET CMP0063 NEW)
 

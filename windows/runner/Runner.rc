@@ -92,10 +92,10 @@ BEGIN
             VALUE "CompanyName", "dev.marchello" "\0"
             VALUE "FileDescription", "A new Flutter project." "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "p2p_model" "\0"
+            VALUE "InternalName", "p2p_matrix" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2021 dev.marchello. All rights reserved." "\0"
-            VALUE "OriginalFilename", "p2p_model.exe" "\0"
-            VALUE "ProductName", "p2p_model" "\0"
+            VALUE "OriginalFilename", "p2p_matrix.exe" "\0"
+            VALUE "ProductName", "p2p_matrix" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

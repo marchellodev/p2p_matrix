@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:p2p_model/components/buttons.dart';
+import 'package:p2p_matrix/components/buttons.dart';
 
 class HistoryModel {}
 
@@ -35,12 +35,12 @@ class HistoryModelCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Container(
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: Colors.blueGrey.shade100,
                     borderRadius:
-                        BorderRadius.vertical(bottom: Radius.circular(6)),
+                        const BorderRadius.vertical(bottom: Radius.circular(6)),
                   ),
-                  padding: EdgeInsets.all(8),
                   width: double.infinity,
                   child: Text(
                     'kademlia_dht',

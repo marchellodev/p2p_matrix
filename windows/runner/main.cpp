@@ -30,7 +30,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   FlutterWindow window(&run_loop, project);
   Win32Window::Point origin(100, 100);
   Win32Window::Size size(920, 680);
-  if (!window.CreateAndShow(L"p2p_model", origin, size)) {
+  if (!window.CreateAndShow(L"p2p_matrix", origin, size)) {
     return EXIT_FAILURE;
   }
   window.SetQuitOnClose(true);

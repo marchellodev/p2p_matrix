@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:p2p_model/components/buttons.dart';
-import 'package:p2p_model/models/script.dart';
+import 'package:p2p_matrix/components/buttons.dart';
+import 'package:p2p_matrix/models/script.dart';
 
 import '../log.dart';
 import '../main.dart';

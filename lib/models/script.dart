@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:p2p_model/models/pings.dart';
+import 'package:p2p_matrix/models/pings.dart';
 
 import '../components/buttons.dart';
 import '../log.dart';
@@ -181,12 +181,10 @@ class ScriptNode {
 
   Map<String, dynamic> toJson() => _$ScriptNodeToJson(this);
 
-  static ScriptNode gen(Random rand) {
-    return ScriptNode(
-        location: rand.nextInt(285 + 1),
-        speed: double.parse(
-            (rand.nextDouble() * (5 - 0.5) + 0.5).toStringAsFixed(4)));
-  }
+  ScriptNode.gen(Random rand)
+      : location = rand.nextInt(285 + 1),
+        speed = double.parse(
+            (rand.nextDouble() * (5 - 0.5) + 0.5).toStringAsFixed(4));
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -197,11 +195,9 @@ class ScriptFile {
     @required this.size,
   });
 
-  static ScriptFile gen(Random rand, double min, double max) {
-    return ScriptFile(
-        size: double.parse(
-            (rand.nextDouble() * (max - min) + min).toStringAsFixed(4)));
-  }
+  ScriptFile.gen(Random rand, double min, double max)
+      : size = double.parse(
+            (rand.nextDouble() * (max - min) + min).toStringAsFixed(4));
 
   factory ScriptFile.fromJson(Map<String, dynamic> json) =>
       _$ScriptFileFromJson(json);

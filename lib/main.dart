@@ -8,11 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
-import 'package:p2p_model/components/buttons.dart';
-import 'package:p2p_model/log.dart';
-import 'package:p2p_model/models/pmodel.dart';
-import 'package:p2p_model/models/script.dart';
-import 'package:p2p_model/screens/script_create.dart';
+import 'package:p2p_matrix/components/buttons.dart';
+import 'package:p2p_matrix/log.dart';
+import 'package:p2p_matrix/models/pmodel.dart';
+import 'package:p2p_matrix/models/script.dart';
+import 'package:p2p_matrix/screens/script_create.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 
 import 'models/pings.dart';
@@ -229,9 +229,9 @@ class _AppState extends State<App> {
                 ),
                 Expanded(
                     child: Column(
-                  children: [
-                    const _RowHeader('Історія', null),
-                    const SizedBox(
+                  children: const [
+                     _RowHeader('Історія', null),
+                     SizedBox(
                       height: 12,
                     ),
                     // HistoryModelCard(),
