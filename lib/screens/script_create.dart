@@ -251,9 +251,9 @@ class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
                                 story: story,
                                 pings: pings);
 
-                            await File('storage/${model.name}.json')
+                            await File('storage/scripts/${model.name}.json')
                                 .create(recursive: true);
-                            await File('storage/${model.name}.json')
+                            await File('storage/scripts/${model.name}.json')
                                 .writeAsString(jsonEncode(model.toJson()));
 
                             await Future.delayed(

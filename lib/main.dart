@@ -10,14 +10,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:p2p_matrix/components/buttons.dart';
 import 'package:p2p_matrix/log.dart';
+import 'package:p2p_matrix/models/history.dart';
 import 'package:p2p_matrix/models/pmodel.dart';
 import 'package:p2p_matrix/models/script.dart';
 import 'package:p2p_matrix/screens/script_create.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 
+import 'models/history.dart';
 import 'models/pings.dart';
 
 Pings pings;
+Function() updateHistory;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized(); //imp line need to be added first
@@ -116,12 +119,13 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  List<ScriptModel> scripts = <ScriptModel>[];
-  List<PModel> models = <PModel>[];
+  final List<ScriptModel> scripts = <ScriptModel>[];
+  final List<PModel> models = <PModel>[];
+  final List<HistoryModel> history = <HistoryModel>[];
 
   void loadScripts() {
-    final files = Directory('storage').list();
-    scripts = [];
+    final files = Directory('storage/scripts').list();
+    scripts.clear();
     files.listen((event) async {
       if (event.path.split('.').last == 'json') {
         print(event.path);
@@ -136,14 +140,32 @@ class _AppState extends State<App> {
 
   void loadModels() {
     setState(() {
-      models = Hive.box<PModel>('models').values.toList();
+      models.clear();
+      models.addAll(Hive.box<PModel>('models').values);
+    });
+  }
+
+  void loadHistory() {
+    final files = Directory('storage/history').list();
+    history.clear();
+    files.listen((event) async {
+      if (event.path.split('.').last == 'json') {
+        print(event.path);
+        final f = await File(event.path).readAsString();
+        setState(() {
+          history.add(
+              HistoryModel.fromJson(jsonDecode(f) as Map<String, dynamic>));
+        });
+      }
     });
   }
 
   @override
   void initState() {
+    updateHistory = loadHistory;
     loadScripts();
     loadModels();
+    loadHistory();
     super.initState();
   }
 
@@ -181,7 +203,8 @@ class _AppState extends State<App> {
                       itemCount: scripts.length,
                       itemBuilder: (ctx, el) =>
                           ScriptModelCard(scripts[el], () {
-                        File('storage/${scripts[el].name}.json').deleteSync();
+                        File('storage/script/${scripts[el].name}.json')
+                            .deleteSync();
                         loadScripts();
                       }),
                     ))
@@ -198,6 +221,10 @@ class _AppState extends State<App> {
                       final typeGroup = XTypeGroup(extensions: ['dll']);
                       final file =
                           await openFile(acceptedTypeGroups: [typeGroup]);
+
+                      if (file == null) {
+                        return;
+                      }
 
                       Hive.box<PModel>('models').add(PModel(
                           path: file.path,
@@ -228,13 +255,17 @@ class _AppState extends State<App> {
                 ),
                 Expanded(
                     child: Column(
-                  children: const [
-                    _RowHeader('Історія', null),
-                    SizedBox(
+                  children: [
+                    const _RowHeader('Історія', null),
+                    const SizedBox(
                       height: 12,
                     ),
-                    // HistoryModelCard(),
-                    // HistoryModelCard(),
+                    Expanded(
+                        child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: history.length,
+                      itemBuilder: (ctx, el) => HistoryModelCard(history[el]),
+                    ))
                   ],
                 )),
               ],

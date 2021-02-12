@@ -270,7 +270,7 @@ class ScriptModelCard extends StatelessWidget {
               ScalableButton(
                   onPressed: () {
                     Process.run('explorer.exe',
-                        ['/select,', 'storage\\${model.name}.json']);
+                        ['/select,', 'storage\\scripts\\${model.name}.json']);
                   },
                   scale: ScaleFormat.big,
                   child: Container(

@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:p2p_matrix/components/buttons.dart';
+import 'package:p2p_matrix/models/history.dart';
+
+import '../main.dart';
+import 'history.dart';
 
 part 'pmodel.g.dart';
 
@@ -37,10 +43,45 @@ class PModel {
         .asFunction<StringFunction>();
   }
 
-  void load() {
-    print(getName().toDartString());
+  void simulate(String scriptName) {
+    final rand = Random();
 
-    // lib.lookupFunction<Pointer<Utf8> Function(), void Function()>('GetName').call();
+    final fileName =
+        '${getName().toDartString()}_${scriptName}_${rand.nextInt(100000000)}.json';
+
+    final model = HistoryModel(
+        fileName: fileName,
+        modelName: getName().toDartString(),
+        modelCreated: lastModified,
+        modelSize: size,
+        scriptName: scriptName,
+        scriptNodes: 10000,
+        scriptOperations: 10000,
+        historyDate: DateTime.now(),
+        dataNotFound: rand.nextDouble(),
+        amountOfUsedNodes: HistoryStats(
+          range: rand.nextDouble() * rand.nextInt(100),
+          median: rand.nextDouble() * rand.nextInt(100),
+          average: rand.nextDouble() * rand.nextInt(100),
+          standardDeviation: rand.nextDouble() * rand.nextInt(100),
+        ),
+        timeToAcquireDate: HistoryStats(
+          range: rand.nextDouble() * rand.nextInt(100),
+          median: rand.nextDouble() * rand.nextInt(100),
+          average: rand.nextDouble() * rand.nextInt(100),
+          standardDeviation: rand.nextDouble() * rand.nextInt(100),
+        ),
+        usedMemory: HistoryStats(
+          range: rand.nextDouble() * rand.nextInt(100),
+          median: rand.nextDouble() * rand.nextInt(100),
+          average: rand.nextDouble() * rand.nextInt(100),
+          standardDeviation: rand.nextDouble() * rand.nextInt(100),
+        ));
+    File('storage/history/$fileName').create(recursive: true);
+    File('storage/history/$fileName')
+        .writeAsStringSync(jsonEncode(model.toJson()));
+
+    updateHistory();
   }
 }
 
@@ -72,7 +113,7 @@ class PModelCard extends StatelessWidget {
               const Spacer(),
               ScalableButton(
                   onPressed: () {
-                    model.load();
+                    model.simulate('rand');
                   },
                   scale: ScaleFormat.big,
                   child: Container(
