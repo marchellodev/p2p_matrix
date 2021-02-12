@@ -15,7 +15,6 @@ class Pings {
     @required this.locations,
   });
 
-
 //   static getLocationPings(BuildContext context) async {
 //     final locations = <int, String>{};
 //     final pings = <PingPair>[];
@@ -55,7 +54,6 @@ class Pings {
 //
 //     // print(j['pingData'].length);
 //   }
-
 
   static Future<Pings> loadFromAssets(BuildContext context) async {
     final data =

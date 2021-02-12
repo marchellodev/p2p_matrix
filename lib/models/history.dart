@@ -8,11 +8,10 @@ class HistoryModelCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScalableButton(
-      onPressed: (){},
+      onPressed: () {},
       scale: ScaleFormat.small,
       child: Container(
         width: double.infinity,
-
         margin: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
         child: Stack(
           children: [

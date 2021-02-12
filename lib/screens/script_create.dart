@@ -220,8 +220,7 @@ class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
                               return;
                             }
                             llog('Started generating script ${name.text}');
-                            Dialogs.showLoadingDialog(
-                                context, _keyLoader);
+                            Dialogs.showLoadingDialog(context, _keyLoader);
 
                             await Future.delayed(
                                 const Duration(milliseconds: 500));
@@ -265,8 +264,7 @@ class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
 
                             Navigator.pop(context);
                             llog('Finished generating script ${name.text}');
-
-                    },
+                          },
                     child: Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(

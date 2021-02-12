@@ -32,11 +32,12 @@ class PModel {
     @required this.lastModified,
   }) {
     _lib = DynamicLibrary.open(path);
-    getName = _lib.lookup<NativeFunction<StringFunction>>('GetModelName').asFunction<StringFunction>();
+    getName = _lib
+        .lookup<NativeFunction<StringFunction>>('GetModelName')
+        .asFunction<StringFunction>();
   }
 
   void load() {
-
     print(getName().toDartString());
 
     // lib.lookupFunction<Pointer<Utf8> Function(), void Function()>('GetName').call();
@@ -90,8 +91,7 @@ class PModelCard extends StatelessWidget {
               const SizedBox(width: 4),
               ScalableButton(
                   onPressed: () {
-                    Process.run('explorer.exe',
-                        [(model.path.split('\\')..removeLast()).join('\\')]);
+                    Process.run('explorer.exe', ['/select,', model.path]);
                   },
                   scale: ScaleFormat.big,
                   child: Container(

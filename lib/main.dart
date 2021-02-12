@@ -31,12 +31,11 @@ void main() {
   runZoned(() async {
     runApp(MyApp()); // starting point of app
   }, onError: (error, stackTrace) {
-      llog('-- ERROR -- ');
+    llog('-- ERROR -- ');
 
-      llog(error.toString());
-      llog(stackTrace.toString());
+    llog(error.toString());
+    llog(stackTrace.toString());
   });
-
 }
 
 class MyApp extends StatelessWidget {
@@ -230,8 +229,8 @@ class _AppState extends State<App> {
                 Expanded(
                     child: Column(
                   children: const [
-                     _RowHeader('Історія', null),
-                     SizedBox(
+                    _RowHeader('Історія', null),
+                    SizedBox(
                       height: 12,
                     ),
                     // HistoryModelCard(),
