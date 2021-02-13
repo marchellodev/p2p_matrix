@@ -16,9 +16,11 @@ dependencies:
   responsive_framework: ^0.0.14
 
   json_annotation: ^3.1.1
-  test: ^1.16.0
+  test: ^1.16.2
   intl: ^0.17.0
 
+
+  select_dialog: ^1.2.3
 
   file_selector: ^0.7.0+2
   file_selector_windows: ^0.0.2

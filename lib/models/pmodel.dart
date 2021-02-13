@@ -9,7 +9,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:p2p_matrix/components/buttons.dart';
+import 'package:p2p_matrix/components/dialogs.dart';
 import 'package:p2p_matrix/log.dart';
+import 'package:p2p_matrix/models/script.dart';
+import 'package:select_dialog/select_dialog.dart';
 
 import '../main.dart';
 
@@ -49,7 +52,7 @@ class PModel {
         .asFunction<RunFunction>();
   }
 
-  Future<void> simulate(String scriptName) async {
+  Future<void> simulate(String scriptName, String scriptPath) async {
     final rand = Random();
 
     final fileName =
@@ -89,8 +92,8 @@ class PModel {
     // File('storage/history/$fileName')
     //     .writeAsStringSync(jsonEncode(model.toJson()));
 
-    run(scriptName.toNativeUtf8(),
-        File('storage/history/$fileName').path.toNativeUtf8());
+    run(scriptPath.toNativeUtf8(),
+        File('storage/history/$fileName').absolute.path.toNativeUtf8());
 
     while (true) {
       await Future.delayed(const Duration(seconds: 1));
@@ -98,8 +101,6 @@ class PModel {
 
       if (f != 0) {
         llog('Response from the Go code saved here: storage/history/$fileName');
-
-        updateHistory();
         return;
       }
       llog('Awaiting response from the Go code: 1 second passed');
@@ -110,8 +111,10 @@ class PModel {
 class PModelCard extends StatelessWidget {
   final PModel model;
   final Function() remove;
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
+  final List<ScriptModel> scripts;
 
-  const PModelCard(this.model, this.remove);
+  PModelCard(this.model, this.scripts, this.remove);
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +138,31 @@ class PModelCard extends StatelessWidget {
               const Spacer(),
               ScalableButton(
                   onPressed: () {
-                    model.simulate('rand');
+                    final f = (String selected) async {
+                      await Future.delayed(Duration(milliseconds: 100));
+                      Dialogs.showLoadingDialog(context, _keyLoader);
+
+                      await model.simulate(selected,
+                          File('storage/scripts/$selected.json').absolute.path);
+                      await Future.delayed(const Duration(milliseconds: 500));
+                      Navigator.of(_keyLoader.currentContext,
+                              rootNavigator: true)
+                          .pop();
+
+                      updateHistory();
+                    };
+
+                    SelectDialog.showModal<String>(
+                      context,
+                      label: 'Виберіть сценарій',
+                      showSearchBox: false,
+                      selectedValue: null,
+                      items: List.generate(
+                          scripts.length, (index) => scripts[index].name),
+                      onChange: (String selected) {
+                        f(selected);
+                      },
+                    );
                   },
                   scale: ScaleFormat.big,
                   child: Container(

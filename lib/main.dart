@@ -242,7 +242,7 @@ class _AppState extends State<App> {
                       physics: const BouncingScrollPhysics(),
                       itemCount: models.length,
                       itemBuilder: (ctx, el) =>
-                          PModelCard(models[el], () async {
+                          PModelCard(models[el], scripts, () async {
                         await Hive.box<PModel>('models').deleteAt(el);
                         loadModels();
                       }),
@@ -302,7 +302,7 @@ class _AppState extends State<App> {
                     child: Row(
                       children: [
                         Text(
-                          '9a1d81b',
+                          'compiled',
                           style: GoogleFonts.rubik(
                               fontSize: 12, color: Colors.blueGrey.shade700),
                         ),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:p2p_matrix/components/buttons.dart';
+import 'package:p2p_matrix/components/dialogs.dart';
 import 'package:p2p_matrix/models/script.dart';
 
 import '../log.dart';
@@ -286,25 +287,5 @@ class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
         ),
       ),
     );
-  }
-}
-
-class Dialogs {
-  static Future<void> showLoadingDialog(
-      BuildContext context, GlobalKey key) async {
-    return showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return WillPopScope(
-              onWillPop: () async => false,
-              child: SimpleDialog(key: key, children: <Widget>[
-                Center(
-                  child: Column(children: const [
-                    CircularProgressIndicator(),
-                  ]),
-                )
-              ]));
-        });
   }
 }
