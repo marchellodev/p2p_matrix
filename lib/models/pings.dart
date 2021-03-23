@@ -56,8 +56,7 @@ class Pings {
 //   }
 
   static Future<Pings> loadFromAssets(BuildContext context) async {
-    final data =
-        await DefaultAssetBundle.of(context).loadString('assets/pings.json');
+    final data = await DefaultAssetBundle.of(context).loadString('assets/pings.json');
 
     return Pings.fromJson(jsonDecode(data) as Map<String, dynamic>);
   }
@@ -66,7 +65,7 @@ class Pings {
 
   Map<String, dynamic> toJson() => _$PingsToJson(this);
 }
-
+// todo refactor to use a normal name here and a simplified name in json
 @JsonSerializable(explicitToJson: true)
 class PingPair {
   final int l1;
@@ -79,8 +78,7 @@ class PingPair {
     @required this.p,
   });
 
-  factory PingPair.fromJson(Map<String, dynamic> json) =>
-      _$PingPairFromJson(json);
+  factory PingPair.fromJson(Map<String, dynamic> json) => _$PingPairFromJson(json);
 
   Map<String, dynamic> toJson() => _$PingPairToJson(this);
 }

@@ -41,9 +41,7 @@ class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
       body: Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.blueGrey.shade900, Colors.blueGrey.shade800])),
+                begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.blueGrey.shade900, Colors.blueGrey.shade800])),
         child: Column(
           children: [
             Container(
@@ -91,13 +89,10 @@ class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
                       child: TextField(
                           controller: operations,
                           keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           style: GoogleFonts.rubik(fontSize: 12),
-                          decoration: const InputDecoration(
-                              labelText: 'Кількість операцій (читання/запису)',
-                              border: OutlineInputBorder()))),
+                          decoration:
+                              const InputDecoration(labelText: 'Кількість операцій (читання/запису)', border: OutlineInputBorder()))),
                   const SizedBox(
                     width: 26,
                   ),
@@ -105,13 +100,9 @@ class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
                       child: TextField(
                           controller: nodesAmount,
                           keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           style: GoogleFonts.rubik(fontSize: 12),
-                          decoration: const InputDecoration(
-                              labelText: 'Кількість вузлів',
-                              border: OutlineInputBorder()))),
+                          decoration: const InputDecoration(labelText: 'Кількість вузлів', border: OutlineInputBorder()))),
                 ],
               ),
             ),
@@ -126,13 +117,10 @@ class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
                       child: TextField(
                           controller: peersMin,
                           keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           style: GoogleFonts.rubik(fontSize: 12),
-                          decoration: const InputDecoration(
-                              labelText: 'Мінімальна кількість пірів в мережі',
-                              border: OutlineInputBorder()))),
+                          decoration:
+                              const InputDecoration(labelText: 'Мінімальна кількість пірів в мережі', border: OutlineInputBorder()))),
                   const SizedBox(
                     width: 26,
                   ),
@@ -140,13 +128,10 @@ class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
                       child: TextField(
                           controller: peersMax,
                           keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           style: GoogleFonts.rubik(fontSize: 12),
-                          decoration: const InputDecoration(
-                              labelText: 'Максимальна кількість пірів в мережі',
-                              border: OutlineInputBorder()))),
+                          decoration:
+                              const InputDecoration(labelText: 'Максимальна кількість пірів в мережі', border: OutlineInputBorder()))),
                 ],
               ),
             ),
@@ -161,14 +146,9 @@ class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
                       child: TextField(
                           controller: fileSizeMin,
                           keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            FilteringTextInputFormatter.deny('.')
-                          ],
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly, FilteringTextInputFormatter.deny('.')],
                           style: GoogleFonts.rubik(fontSize: 12),
-                          decoration: const InputDecoration(
-                              labelText: 'Мінімальний розмір файлу (МБ)',
-                              border: OutlineInputBorder()))),
+                          decoration: const InputDecoration(labelText: 'Мінімальний розмір файлу (МБ)', border: OutlineInputBorder()))),
                   const SizedBox(
                     width: 26,
                   ),
@@ -176,14 +156,9 @@ class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
                       child: TextField(
                           controller: fileSizeMax,
                           keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            FilteringTextInputFormatter.deny('.')
-                          ],
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly, FilteringTextInputFormatter.deny('.')],
                           style: GoogleFonts.rubik(fontSize: 12),
-                          decoration: const InputDecoration(
-                              labelText: 'Максимальний розмір файлу (МБ)',
-                              border: OutlineInputBorder()))),
+                          decoration: const InputDecoration(labelText: 'Максимальний розмір файлу (МБ)', border: OutlineInputBorder()))),
                 ],
               ),
             ),
@@ -199,9 +174,7 @@ class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
                           controller: name,
                           keyboardType: TextInputType.number,
                           style: GoogleFonts.rubik(fontSize: 12),
-                          decoration: const InputDecoration(
-                              labelText: 'Назва сценарію',
-                              border: OutlineInputBorder()))),
+                          decoration: const InputDecoration(labelText: 'Назва сценарію', border: OutlineInputBorder()))),
                   const SizedBox(
                     width: 26,
                   ),
@@ -220,24 +193,17 @@ class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
                                 fileSizeMax.text.isEmpty) {
                               return;
                             }
-                            llog('Started generating script ${name.text}');
+                            wLog('Started generating script ${name.text}');
                             Dialogs.showLoadingDialog(context, _keyLoader);
 
-                            await Future.delayed(
-                                const Duration(milliseconds: 500));
-                            final nodes = ScriptModel.genNodes(
-                                int.parse(nodesAmount.text));
+                            await Future.delayed(const Duration(milliseconds: 500));
+                            final nodes = ScriptModel.genNodes(int.parse(nodesAmount.text));
 
                             final files = ScriptModel.genFiles(
-                                int.parse(nodesAmount.text),
-                                double.parse(fileSizeMin.text),
-                                double.parse(fileSizeMax.text));
+                                int.parse(nodesAmount.text), double.parse(fileSizeMin.text), double.parse(fileSizeMax.text));
 
-                            final story = ScriptModel.genStory(
-                                int.parse(nodesAmount.text),
-                                int.parse(operations.text),
-                                int.parse(peersMin.text),
-                                int.parse(peersMax.text));
+                            final story = ScriptModel.genStory(int.parse(nodesAmount.text), int.parse(operations.text),
+                                int.parse(peersMin.text), int.parse(peersMax.text));
 
                             final model = ScriptModel(
                                 name: name.text,
@@ -252,30 +218,22 @@ class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
                                 story: story,
                                 pings: pings);
 
-                            await File('storage/scripts/${model.name}.json')
-                                .create(recursive: true);
-                            await File('storage/scripts/${model.name}.json')
-                                .writeAsString(jsonEncode(model.toJson()));
+                            await File('storage/scripts/${model.name}.json').create(recursive: true);
+                            await File('storage/scripts/${model.name}.json').writeAsString(jsonEncode(model.toJson()));
 
-                            await Future.delayed(
-                                const Duration(milliseconds: 500));
-                            Navigator.of(_keyLoader.currentContext,
-                                    rootNavigator: true)
-                                .pop();
+                            await Future.delayed(const Duration(milliseconds: 500));
+                            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
                             Navigator.pop(context);
-                            llog('Finished generating script ${name.text}');
+                            wLog('Finished generating script ${name.text}');
                           },
                     child: Container(
                       padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                          color: Colors.cyan.shade700,
-                          borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(color: Colors.cyan.shade700, borderRadius: BorderRadius.circular(12)),
                       child: Center(
                         child: Text(
                           'Згенерувати',
-                          style:
-                              GoogleFonts.rubik(color: Colors.blueGrey.shade50),
+                          style: GoogleFonts.rubik(color: Colors.blueGrey.shade50),
                         ),
                       ),
                     ),

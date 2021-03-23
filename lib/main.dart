@@ -15,6 +15,7 @@ import 'package:p2p_matrix/models/pmodel.dart';
 import 'package:p2p_matrix/models/script.dart';
 import 'package:p2p_matrix/screens/script_create.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'models/history.dart';
 import 'models/pings.dart';
@@ -25,19 +26,19 @@ Function() updateHistory;
 void main() {
   WidgetsFlutterBinding.ensureInitialized(); //imp line need to be added first
   FlutterError.onError = (FlutterErrorDetails details) {
-    llog('-- ERROR 2 -- ');
+    wLog('-- ERROR 2 -- ');
 
-    llog(details.exception.toString());
-    llog(details.stack.toString());
+    wLog(details.exception.toString());
+    wLog(details.stack.toString());
   };
 
   runZoned(() async {
     runApp(MyApp()); // starting point of app
   }, onError: (error, stackTrace) {
-    llog('-- ERROR -- ');
+    wLog('-- ERROR -- ');
 
-    llog(error.toString());
-    llog(stackTrace.toString());
+    wLog(error.toString());
+    wLog(stackTrace.toString());
   });
 }
 
@@ -81,7 +82,7 @@ class _AppLoaderState extends State<AppLoader> {
 
       File('storage/log.txt').create(recursive: true);
 
-      llog('App has launched');
+      wLog('App has launched');
 
       setState(() {
         loaded = true;
@@ -131,8 +132,7 @@ class _AppState extends State<App> {
         print(event.path);
         final f = await File(event.path).readAsString();
         setState(() {
-          scripts
-              .add(ScriptModel.fromJson(jsonDecode(f) as Map<String, dynamic>));
+          scripts.add(ScriptModel.fromJson(jsonDecode(f) as Map<String, dynamic>));
         });
       }
     });
@@ -153,8 +153,7 @@ class _AppState extends State<App> {
         print(event.path);
         final f = await File(event.path).readAsString();
         setState(() {
-          history.add(
-              HistoryModel.fromJson(jsonDecode(f) as Map<String, dynamic>));
+          history.add(HistoryModel.fromJson(jsonDecode(f) as Map<String, dynamic>));
         });
       }
     });
@@ -178,20 +177,14 @@ class _AppState extends State<App> {
           Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                  Colors.blueGrey.shade900,
-                  Colors.blueGrey.shade800
-                ])),
+                    begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.blueGrey.shade900, Colors.blueGrey.shade800])),
             child: Row(
               children: [
                 Expanded(
                     child: Column(
                   children: [
                     _RowHeader('Сценарії', () async {
-                      await Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => ScriptCreateScreen()));
+                      await Navigator.of(context).push(MaterialPageRoute(builder: (_) => ScriptCreateScreen()));
                       loadScripts();
                     }),
                     const SizedBox(
@@ -201,10 +194,8 @@ class _AppState extends State<App> {
                         child: ListView.builder(
                       physics: const BouncingScrollPhysics(),
                       itemCount: scripts.length,
-                      itemBuilder: (ctx, el) =>
-                          ScriptModelCard(scripts[el], () {
-                        File('storage/script/${scripts[el].name}.json')
-                            .deleteSync();
+                      itemBuilder: (ctx, el) => ScriptModelCard(scripts[el], () {
+                        File('storage/script/${scripts[el].name}.json').deleteSync();
                         loadScripts();
                       }),
                     ))
@@ -219,8 +210,7 @@ class _AppState extends State<App> {
                   children: [
                     _RowHeader('Моделі', () async {
                       final typeGroup = XTypeGroup(extensions: ['dll']);
-                      final file =
-                          await openFile(acceptedTypeGroups: [typeGroup]);
+                      final file = await openFile(acceptedTypeGroups: [typeGroup]);
 
                       if (file == null) {
                         return;
@@ -229,8 +219,7 @@ class _AppState extends State<App> {
                       Hive.box<PModel>('models').add(PModel(
                           path: file.path,
                           lastModified: await file.lastModified(),
-                          size: double.parse((await file.length() / 1000000)
-                              .toStringAsFixed(4))));
+                          size: double.parse((await file.length() / 1000000).toStringAsFixed(4))));
 
                       loadModels();
                     }),
@@ -241,8 +230,7 @@ class _AppState extends State<App> {
                         child: ListView.builder(
                       physics: const BouncingScrollPhysics(),
                       itemCount: models.length,
-                      itemBuilder: (ctx, el) =>
-                          PModelCard(models[el], scripts, () async {
+                      itemBuilder: (ctx, el) => PModelCard(models[el], scripts, () async {
                         await Hive.box<PModel>('models').deleteAt(el);
                         loadModels();
                       }),
@@ -278,8 +266,7 @@ class _AppState extends State<App> {
               width: 280,
               decoration: BoxDecoration(
                 color: Colors.blueGrey.shade50,
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(10)),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
               ),
               padding: const EdgeInsets.all(14),
               child: Row(
@@ -292,19 +279,19 @@ class _AppState extends State<App> {
                     },
                     child: Text(
                       '> відкрити лог',
-                      style: GoogleFonts.rubik(
-                          fontSize: 12, color: Colors.blueGrey.shade900),
+                      style: GoogleFonts.rubik(fontSize: 12, color: Colors.blueGrey.shade900),
                     ),
                   ),
                   ScalableButton(
                     scale: ScaleFormat.big,
-                    onPressed: () {},
+                    onPressed: () {
+                      launch('https://github.com/marchellodev/p2p_matrix');
+                    },
                     child: Row(
                       children: [
                         Text(
                           'compiled',
-                          style: GoogleFonts.rubik(
-                              fontSize: 12, color: Colors.blueGrey.shade700),
+                          style: GoogleFonts.rubik(fontSize: 12, color: Colors.blueGrey.shade700),
                         ),
                         const SizedBox(
                           width: 6,
@@ -339,6 +326,7 @@ class _RowHeader extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 text,
@@ -355,8 +343,7 @@ class _RowHeader extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(
-                          color: Colors.grey.shade700..withOpacity(0.6)),
+                      border: Border.all(color: Colors.grey.shade700..withOpacity(0.6)),
                     ),
                     padding: const EdgeInsets.all(8),
                     child: SvgPicture.asset('assets/icons/icon_add.svg'),

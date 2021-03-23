@@ -5,15 +5,13 @@ class ScalableButton extends StatefulWidget {
   final Function() onPressed;
   final ScaleFormat scale;
 
-  const ScalableButton(
-      {@required this.child, @required this.onPressed, @required this.scale});
+  const ScalableButton({@required this.child, @required this.onPressed, @required this.scale});
 
   @override
   _ScalableButtonState createState() => _ScalableButtonState();
 }
 
-class _ScalableButtonState extends State<ScalableButton>
-    with SingleTickerProviderStateMixin {
+class _ScalableButtonState extends State<ScalableButton> with SingleTickerProviderStateMixin {
   Animation<double> animation;
   AnimationController controller;
 
@@ -21,12 +19,9 @@ class _ScalableButtonState extends State<ScalableButton>
 
   @override
   void initState() {
-    controller = AnimationController(
-        duration: const Duration(milliseconds: 50), vsync: this);
-    animation = Tween<double>(
-            begin: 1, end: widget.scale == ScaleFormat.big ? 0.86 : 0.94)
-        .animate(controller)
-          ..addListener(() => setState(() {}));
+    controller = AnimationController(duration: const Duration(milliseconds: 50), vsync: this);
+    animation = Tween<double>(begin: 1, end: widget.scale == ScaleFormat.big ? 0.86 : 0.94).animate(controller)
+      ..addListener(() => setState(() {}));
 
     listener = (status) {
       if (status == AnimationStatus.completed) {

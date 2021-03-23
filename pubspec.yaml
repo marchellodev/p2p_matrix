@@ -11,32 +11,37 @@ dependencies:
   flutter:
     sdk: flutter
 
-  google_fonts: ^1.1.2
-  flutter_svg: ^0.19.2+1
-  responsive_framework: ^0.0.14
+  google_fonts: ^2.0.0
+  flutter_svg: ^0.19.3
+  responsive_framework: ^0.1.0
 
   json_annotation: ^3.1.1
-  test: ^1.16.2
   intl: ^0.17.0
 
 
-  select_dialog: ^1.2.3
+  select_dialog: ^2.0.0
 
-  file_selector: ^0.7.0+2
+  file_selector: ^0.8.2
   file_selector_windows: ^0.0.2
 
-  hive: ^1.4.4+1
+  hive: ^2.0.0
 
   ffi: ^1.0.0
+
+  scidart: ^0.0.1-dev.12
+  url_launcher: ^6.0.2
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  lint: ^1.5.1
+  lint: ^1.5.3
   build_runner: ^1.11.1
   json_serializable: ^3.5.1
-  hive_generator: ^0.8.2
+  hive_generator: ^1.0.0
+
+  test: ^1.16.2
 
 flutter:
 

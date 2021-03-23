@@ -24,6 +24,10 @@ class HistoryModel {
 
   final String fileName;
 
+  final List<int> used;
+  final List<double> mem;
+  final List<double> time;
+
   HistoryModel({
     @required this.scriptName,
     @required this.scriptNodes,
@@ -37,10 +41,12 @@ class HistoryModel {
     @required this.usedMemory,
     @required this.dataNotFound,
     @required this.fileName,
+    @required this.used,
+    @required this.mem,
+    @required this.time,
   });
 
-  factory HistoryModel.fromJson(Map<String, dynamic> json) =>
-      _$HistoryModelFromJson(json);
+  factory HistoryModel.fromJson(Map<String, dynamic> json) => _$HistoryModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$HistoryModelToJson(this);
 }
@@ -59,8 +65,7 @@ class HistoryStats {
     @required this.standardDeviation,
   });
 
-  factory HistoryStats.fromJson(Map<String, dynamic> json) =>
-      _$HistoryStatsFromJson(json);
+  factory HistoryStats.fromJson(Map<String, dynamic> json) => _$HistoryStatsFromJson(json);
 
   Map<String, dynamic> toJson() => _$HistoryStatsToJson(this);
 }
@@ -74,8 +79,7 @@ class HistoryModelCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScalableButton(
       onPressed: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (ctx) => MatrixResultScreen(model)));
+        Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => MatrixResultScreen(model)));
       },
       scale: ScaleFormat.small,
       child: Container(
@@ -89,15 +93,13 @@ class HistoryModelCard extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.blueGrey.shade100,
-                    borderRadius:
-                        const BorderRadius.vertical(top: Radius.circular(6)),
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
                   ),
                   padding: const EdgeInsets.all(8),
                   width: double.infinity,
                   child: Text(
                     model.modelName,
-                    style: GoogleFonts.rubik(
-                        color: Colors.blueGrey.shade800, fontSize: 12),
+                    style: GoogleFonts.rubik(color: Colors.blueGrey.shade800, fontSize: 12),
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -105,14 +107,12 @@ class HistoryModelCard extends StatelessWidget {
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: Colors.blueGrey.shade100,
-                    borderRadius:
-                        const BorderRadius.vertical(bottom: Radius.circular(6)),
+                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(6)),
                   ),
                   width: double.infinity,
                   child: Text(
                     model.scriptName,
-                    style: GoogleFonts.rubik(
-                        color: Colors.blueGrey.shade800, fontSize: 12),
+                    style: GoogleFonts.rubik(color: Colors.blueGrey.shade800, fontSize: 12),
                   ),
                 ),
               ],
@@ -121,15 +121,12 @@ class HistoryModelCard extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: Colors.blueGrey.shade200),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: Colors.blueGrey.shade200),
                   padding: const EdgeInsets.all(3.4),
                   margin: const EdgeInsets.all(8),
                   child: Text(
                     DateFormat('yyyy-MM-dd hh:mm:ss').format(model.historyDate),
-                    style: GoogleFonts.rubik(
-                        color: Colors.blueGrey.shade700, fontSize: 10),
+                    style: GoogleFonts.rubik(color: Colors.blueGrey.shade700, fontSize: 10),
                   ),
                 ),
               ),

@@ -26,18 +26,19 @@ class ScriptModel {
   final List<ScriptStoryElement> story;
   final Pings pings;
 
-  const ScriptModel(
-      {@required this.name,
-      @required this.operations,
-      @required this.nodesAmount,
-      @required this.peersMin,
-      @required this.peersMax,
-      @required this.fileSizeMin,
-      @required this.fileSizeMax,
-      @required this.nodes,
-      @required this.files,
-      @required this.story,
-      @required this.pings});
+  const ScriptModel({
+    @required this.name,
+    @required this.operations,
+    @required this.nodesAmount,
+    @required this.peersMin,
+    @required this.peersMax,
+    @required this.fileSizeMin,
+    @required this.fileSizeMax,
+    @required this.nodes,
+    @required this.files,
+    @required this.story,
+    @required this.pings,
+  });
 
   static Map<int, ScriptNode> genNodes(int max) {
     final result = <int, ScriptNode>{};
@@ -62,8 +63,7 @@ class ScriptModel {
   }
 
   // todo check nodesMin, nodesMax, nodes whether they make sense
-  static List<ScriptStoryElement> genStory(
-      int nodes, int actions, int nodesMin, int nodesMax) {
+  static List<ScriptStoryElement> genStory(int nodes, int actions, int nodesMin, int nodesMax) {
     final maxFiles = nodes ~/ 2;
     final story = <ScriptStoryElement>[];
     final filesInTheNetwork = <int>[];
@@ -81,9 +81,7 @@ class ScriptModel {
       }
     }
 
-    story.add(ScriptStoryElement(nodeActions: {
-      for (var el in nodesTurnedOn) el: ScriptElementNodeAction.on
-    }, operations: {}));
+    story.add(ScriptStoryElement(nodeActions: {for (var el in nodesTurnedOn) el: ScriptElementNodeAction.on}, operations: {}));
 
     // generating the story itself
     for (var i = 0; i < actions ~/ 5; i++) {
@@ -123,16 +121,14 @@ class ScriptModel {
           nodesTurnedOn.shuffle(rand);
           final node = nodesTurnedOn.first;
           if (!nodeOperations.keys.contains(node)) {
-            nodeOperations[node] = ScriptElementOperation(
-                type: ScriptElementOperationType.write, fileId: file);
+            nodeOperations[node] = ScriptElementOperation(type: ScriptElementOperationType.write, fileId: file);
           }
         } else {
           filesInTheNetwork.shuffle(rand);
           final file = filesInTheNetwork.first;
           nodesTurnedOn.shuffle();
           final node = nodesTurnedOn[0];
-          nodeOperations[node] = ScriptElementOperation(
-              type: ScriptElementOperationType.read, fileId: file);
+          nodeOperations[node] = ScriptElementOperation(type: ScriptElementOperationType.read, fileId: file);
         }
       }
       // var operation;
@@ -141,8 +137,7 @@ class ScriptModel {
       //   // operation = {id: ScriptElementOperation.};
       // }
 
-      story.add(ScriptStoryElement(
-          nodeActions: nodeActions, operations: nodeOperations));
+      story.add(ScriptStoryElement(nodeActions: nodeActions, operations: nodeOperations));
     }
 
     return story;
@@ -159,8 +154,7 @@ class ScriptModel {
     // here we generate the story lol
   }
 
-  factory ScriptModel.fromJson(Map<String, dynamic> json) =>
-      _$ScriptModelFromJson(json);
+  factory ScriptModel.fromJson(Map<String, dynamic> json) => _$ScriptModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$ScriptModelToJson(this);
 }
@@ -176,15 +170,14 @@ class ScriptNode {
     @required this.speed,
   });
 
-  factory ScriptNode.fromJson(Map<String, dynamic> json) =>
-      _$ScriptNodeFromJson(json);
+  factory ScriptNode.fromJson(Map<String, dynamic> json) => _$ScriptNodeFromJson(json);
 
   Map<String, dynamic> toJson() => _$ScriptNodeToJson(this);
 
+  // todo wtf
   ScriptNode.gen(Random rand)
       : location = rand.nextInt(285 + 1),
-        speed = double.parse(
-            (rand.nextDouble() * (5 - 0.5) + 0.5).toStringAsFixed(4));
+        speed = double.parse((rand.nextDouble() * (5 - 0.5) + 0.5).toStringAsFixed(4));
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -195,12 +188,9 @@ class ScriptFile {
     @required this.size,
   });
 
-  ScriptFile.gen(Random rand, double min, double max)
-      : size = double.parse(
-            (rand.nextDouble() * (max - min) + min).toStringAsFixed(4));
+  ScriptFile.gen(Random rand, double min, double max) : size = double.parse((rand.nextDouble() * (max - min) + min).toStringAsFixed(4));
 
-  factory ScriptFile.fromJson(Map<String, dynamic> json) =>
-      _$ScriptFileFromJson(json);
+  factory ScriptFile.fromJson(Map<String, dynamic> json) => _$ScriptFileFromJson(json);
 
   Map<String, dynamic> toJson() => _$ScriptFileToJson(this);
 }
@@ -215,12 +205,12 @@ class ScriptStoryElement {
     @required this.operations,
   });
 
-  factory ScriptStoryElement.fromJson(Map<String, dynamic> json) =>
-      _$ScriptStoryElementFromJson(json);
+  factory ScriptStoryElement.fromJson(Map<String, dynamic> json) => _$ScriptStoryElementFromJson(json);
 
   Map<String, dynamic> toJson() => _$ScriptStoryElementToJson(this);
 }
 
+// todo why not true/false ???
 enum ScriptElementNodeAction { on, off }
 
 @JsonSerializable(explicitToJson: true)
@@ -233,8 +223,7 @@ class ScriptElementOperation {
     @required this.type,
   });
 
-  factory ScriptElementOperation.fromJson(Map<String, dynamic> json) =>
-      _$ScriptElementOperationFromJson(json);
+  factory ScriptElementOperation.fromJson(Map<String, dynamic> json) => _$ScriptElementOperationFromJson(json);
 
   Map<String, dynamic> toJson() => _$ScriptElementOperationToJson(this);
 }
@@ -251,9 +240,7 @@ class ScriptModelCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      decoration: BoxDecoration(
-          color: Colors.blueGrey.shade100,
-          borderRadius: BorderRadius.circular(6)),
+      decoration: BoxDecoration(color: Colors.blueGrey.shade100, borderRadius: BorderRadius.circular(6)),
       margin: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
       padding: const EdgeInsets.all(8),
       child: Column(
@@ -263,22 +250,17 @@ class ScriptModelCard extends StatelessWidget {
             children: [
               Text(
                 model.name,
-                style: GoogleFonts.rubik(
-                    color: Colors.blueGrey.shade800, fontSize: 12),
+                style: GoogleFonts.rubik(color: Colors.blueGrey.shade800, fontSize: 12),
               ),
               const Spacer(),
               ScalableButton(
                   onPressed: () {
-                    Process.run('explorer.exe',
-                        ['/select,', 'storage\\scripts\\${model.name}.json']);
+                    Process.run('explorer.exe', ['/select,', 'storage\\scripts\\${model.name}.json']);
                   },
                   scale: ScaleFormat.big,
                   child: Container(
                     decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                            color: Colors.blueGrey.shade500.withOpacity(0.6),
-                            width: 1.2)),
+                        shape: BoxShape.circle, border: Border.all(color: Colors.blueGrey.shade500.withOpacity(0.6), width: 1.2)),
                     padding: const EdgeInsets.all(3.2),
                     child: Icon(
                       Icons.folder_open,
@@ -291,15 +273,12 @@ class ScriptModelCard extends StatelessWidget {
                   onPressed: () {
                     onRemove();
 
-                    llog('Removed script ${model.name}.json');
+                    wLog('Removed script ${model.name}.json');
                   },
                   scale: ScaleFormat.big,
                   child: Container(
                     decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                            color: Colors.blueGrey.shade500.withOpacity(0.6),
-                            width: 1.2)),
+                        shape: BoxShape.circle, border: Border.all(color: Colors.blueGrey.shade500.withOpacity(0.6), width: 1.2)),
                     padding: const EdgeInsets.all(3.2),
                     child: Icon(
                       Icons.delete_outline,
@@ -312,8 +291,7 @@ class ScriptModelCard extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             '${NumberFormat('#,##0').format(model?.operations ?? 0).replaceAll(',', ' ')} операцій • ${NumberFormat('#,##0').format(model?.nodesAmount ?? 0).replaceAll(',', ' ')} вузлів',
-            style: GoogleFonts.rubik(
-                fontSize: 10, color: Colors.blueGrey.shade700),
+            style: GoogleFonts.rubik(fontSize: 10, color: Colors.blueGrey.shade700),
           )
         ],
       ),

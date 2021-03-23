@@ -18,9 +18,7 @@ class MatrixResultScreen extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.blueGrey.shade900, Colors.blueGrey.shade800])),
+                begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.blueGrey.shade900, Colors.blueGrey.shade800])),
         child: Column(
           children: [
             Container(
@@ -63,8 +61,7 @@ class MatrixResultScreen extends StatelessWidget {
                   ScalableButton(
                     scale: ScaleFormat.big,
                     onPressed: () {
-                      Process.run('explorer.exe',
-                          ['/select,', 'storage\\history\\${model.fileName}']);
+                      Process.run('explorer.exe', ['/select,', 'storage\\history\\${model.fileName}']);
                     },
                     child: Text(
                       '.json',
@@ -91,9 +88,7 @@ class MatrixResultScreen extends StatelessWidget {
                     children: [
                       Container(
                         width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: Colors.blueGrey.shade100,
-                            borderRadius: BorderRadius.circular(6)),
+                        decoration: BoxDecoration(color: Colors.blueGrey.shade100, borderRadius: BorderRadius.circular(6)),
                         margin: const EdgeInsets.symmetric(horizontal: 18),
                         padding: const EdgeInsets.all(8),
                         child: Column(
@@ -101,16 +96,12 @@ class MatrixResultScreen extends StatelessWidget {
                           children: [
                             Text(
                               model.modelName,
-                              style: GoogleFonts.rubik(
-                                  color: Colors.blueGrey.shade800,
-                                  fontSize: 12),
+                              style: GoogleFonts.rubik(color: Colors.blueGrey.shade800, fontSize: 12),
                             ),
                             const SizedBox(height: 6),
                             Text(
                               '${DateFormat('yyyy-MM-dd').format(model.modelCreated)} • ${NumberFormat('#,##0.##').format(model.modelSize).replaceAll(',', ' ')} Mb',
-                              style: GoogleFonts.rubik(
-                                  fontSize: 10,
-                                  color: Colors.blueGrey.shade700),
+                              style: GoogleFonts.rubik(fontSize: 10, color: Colors.blueGrey.shade700),
                             )
                           ],
                         ),
@@ -118,26 +109,20 @@ class MatrixResultScreen extends StatelessWidget {
                       const SizedBox(height: 24),
                       Container(
                         width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: Colors.blueGrey.shade100,
-                            borderRadius: BorderRadius.circular(6)),
+                        decoration: BoxDecoration(color: Colors.blueGrey.shade100, borderRadius: BorderRadius.circular(6)),
                         margin: const EdgeInsets.symmetric(horizontal: 18),
                         padding: const EdgeInsets.all(8),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'model',
-                              style: GoogleFonts.rubik(
-                                  color: Colors.blueGrey.shade800,
-                                  fontSize: 12),
+                              model.scriptName,
+                              style: GoogleFonts.rubik(color: Colors.blueGrey.shade800, fontSize: 12),
                             ),
                             const SizedBox(height: 6),
                             Text(
                               '${NumberFormat('#,##0').format(model.scriptOperations).replaceAll(',', ' ')} операцій • ${NumberFormat('#,##0').format(model.scriptNodes).replaceAll(',', ' ')} вузлів',
-                              style: GoogleFonts.rubik(
-                                  fontSize: 10,
-                                  color: Colors.blueGrey.shade700),
+                              style: GoogleFonts.rubik(fontSize: 10, color: Colors.blueGrey.shade700),
                             )
                           ],
                         ),
@@ -154,36 +139,24 @@ class MatrixResultScreen extends StatelessWidget {
                     physics: const BouncingScrollPhysics(),
                     padding: const EdgeInsets.symmetric(vertical: 24),
                     children: [
-                      StatsCard(
-                          title: 'Час отримання даних із мережі',
-                          dataType: 'с',
-                          stats: model.timeToAcquireDate),
+                      StatsCard(title: 'Час отримання даних із мережі', dataType: 'с', stats: model.timeToAcquireDate),
                       const SizedBox(height: 22),
-                      StatsCard(
-                          title:
-                              'Кількість задіяних вузлів при отриманні даних',
-                          dataType: '',
-                          stats: model.amountOfUsedNodes),
+                      StatsCard(title: 'Кількість задіяних вузлів при отриманні даних', dataType: '', stats: model.amountOfUsedNodes),
                       const SizedBox(height: 22),
-                      StatsCard(
-                          title: 'Дані збережені кожним вузлом',
-                          dataType: 'Mb',
-                          stats: model.usedMemory),
+                      StatsCard(title: 'Дані збережені кожним вузлом', dataType: 'Mb', stats: model.usedMemory),
                       const SizedBox(height: 22),
                       Column(
                         children: [
                           Text(
                             'Дані не знайдені',
-                            style: GoogleFonts.rubik(
-                                fontSize: 14, color: Colors.grey.shade50),
+                            style: GoogleFonts.rubik(fontSize: 14, color: Colors.grey.shade50),
                           ),
                           const SizedBox(height: 16),
                           Column(
                             children: [
                               Text(
                                 '${(model.dataNotFound * 100).toStringAsFixed(4)} %',
-                                style: GoogleFonts.rubik(
-                                    fontSize: 16, color: Colors.grey.shade100),
+                                style: GoogleFonts.rubik(fontSize: 16, color: Colors.grey.shade100),
                               ),
                             ],
                           ),
@@ -229,16 +202,14 @@ class StatsCard extends StatelessWidget {
               children: [
                 Text(
                   '${NumberFormat('#,##0.##').format(stats.average).replaceAll(',', ' ')} $dataType',
-                  style: GoogleFonts.rubik(
-                      fontSize: 16, color: Colors.grey.shade100),
+                  style: GoogleFonts.rubik(fontSize: 16, color: Colors.grey.shade100),
                 ),
                 const SizedBox(
                   height: 6,
                 ),
                 Text(
                   'середнє',
-                  style: GoogleFonts.rubik(
-                      fontSize: 12, color: Colors.grey.shade400),
+                  style: GoogleFonts.rubik(fontSize: 12, color: Colors.grey.shade400),
                 )
               ],
             ),
@@ -247,16 +218,14 @@ class StatsCard extends StatelessWidget {
               children: [
                 Text(
                   '${NumberFormat('#,##0.##').format(stats.median).replaceAll(',', ' ')} $dataType',
-                  style: GoogleFonts.rubik(
-                      fontSize: 16, color: Colors.grey.shade100),
+                  style: GoogleFonts.rubik(fontSize: 16, color: Colors.grey.shade100),
                 ),
                 const SizedBox(
                   height: 6,
                 ),
                 Text(
                   'медіана',
-                  style: GoogleFonts.rubik(
-                      fontSize: 12, color: Colors.grey.shade400),
+                  style: GoogleFonts.rubik(fontSize: 12, color: Colors.grey.shade400),
                 )
               ],
             ),
@@ -265,16 +234,14 @@ class StatsCard extends StatelessWidget {
               children: [
                 Text(
                   '${NumberFormat('#,##0.##').format(stats.range).replaceAll(',', ' ')} $dataType',
-                  style: GoogleFonts.rubik(
-                      fontSize: 16, color: Colors.grey.shade100),
+                  style: GoogleFonts.rubik(fontSize: 16, color: Colors.grey.shade100),
                 ),
                 const SizedBox(
                   height: 6,
                 ),
                 Text(
                   'розмах',
-                  style: GoogleFonts.rubik(
-                      fontSize: 12, color: Colors.grey.shade400),
+                  style: GoogleFonts.rubik(fontSize: 12, color: Colors.grey.shade400),
                 )
               ],
             ),
@@ -283,8 +250,7 @@ class StatsCard extends StatelessWidget {
               children: [
                 Text(
                   '${NumberFormat('#,##0.##').format(stats.standardDeviation).replaceAll(',', ' ')} $dataType',
-                  style: GoogleFonts.rubik(
-                      fontSize: 16, color: Colors.grey.shade100),
+                  style: GoogleFonts.rubik(fontSize: 16, color: Colors.grey.shade100),
                 ),
                 const SizedBox(
                   height: 6,
@@ -292,8 +258,7 @@ class StatsCard extends StatelessWidget {
                 Text(
                   'середнє\nвідхилення',
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.rubik(
-                      fontSize: 12, color: Colors.grey.shade400),
+                  style: GoogleFonts.rubik(fontSize: 12, color: Colors.grey.shade400),
                 )
               ],
             )
