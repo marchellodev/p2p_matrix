@@ -8,7 +8,10 @@ part of 'pings.dart';
 
 Pings _$PingsFromJson(Map<String, dynamic> json) {
   return Pings(
-    pings: (json['pings'] as List)?.map((e) => e == null ? null : PingPair.fromJson(e as Map<String, dynamic>))?.toList(),
+    pings: (json['pings'] as List)
+        ?.map((e) =>
+            e == null ? null : PingPair.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
     locations: (json['locations'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(int.parse(k), e as String),
     ),

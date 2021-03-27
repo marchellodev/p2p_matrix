@@ -29,7 +29,7 @@ dependencies:
   ffi: ^1.0.0
 
   scidart: ^0.0.1-dev.12
-  url_launcher: ^6.0.2
+  url_launcher: ^6.0.3
 
 
 dev_dependencies:

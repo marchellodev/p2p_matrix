@@ -203,7 +203,7 @@ class _ScriptCreateScreenState extends State<ScriptCreateScreen> {
                                 int.parse(nodesAmount.text), double.parse(fileSizeMin.text), double.parse(fileSizeMax.text));
 
                             final story = ScriptModel.genStory(int.parse(nodesAmount.text), int.parse(operations.text),
-                                int.parse(peersMin.text), int.parse(peersMax.text));
+                                int.parse(peersMin.text), int.parse(peersMax.text), nodes);
 
                             final model = ScriptModel(
                                 name: name.text,
