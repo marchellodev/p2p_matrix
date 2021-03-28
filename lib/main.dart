@@ -132,7 +132,8 @@ class _AppState extends State<App> {
         print(event.path);
         final f = await File(event.path).readAsString();
         setState(() {
-          scripts.add(ScriptModel.fromJson(jsonDecode(f) as Map<String, dynamic>));
+          scripts
+              .add(ScriptModel.fromJson(jsonDecode(f) as Map<String, dynamic>));
         });
       }
     });
@@ -153,7 +154,8 @@ class _AppState extends State<App> {
         print(event.path);
         final f = await File(event.path).readAsString();
         setState(() {
-          history.add(HistoryModel.fromJson(jsonDecode(f) as Map<String, dynamic>));
+          history.add(
+              HistoryModel.fromJson(jsonDecode(f) as Map<String, dynamic>));
         });
       }
     });
@@ -177,14 +179,20 @@ class _AppState extends State<App> {
           Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
-                    begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.blueGrey.shade900, Colors.blueGrey.shade800])),
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                  Colors.blueGrey.shade900,
+                  Colors.blueGrey.shade800
+                ])),
             child: Row(
               children: [
                 Expanded(
                     child: Column(
                   children: [
                     _RowHeader('Сценарії', () async {
-                      await Navigator.of(context).push(MaterialPageRoute(builder: (_) => ScriptCreateScreen()));
+                      await Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => ScriptCreateScreen()));
                       loadScripts();
                     }),
                     const SizedBox(
@@ -194,8 +202,10 @@ class _AppState extends State<App> {
                         child: ListView.builder(
                       physics: const BouncingScrollPhysics(),
                       itemCount: scripts.length,
-                      itemBuilder: (ctx, el) => ScriptModelCard(scripts[el], () {
-                        File('storage/script/${scripts[el].name}.json').deleteSync();
+                      itemBuilder: (ctx, el) =>
+                          ScriptModelCard(scripts[el], () {
+                        File('storage/script/${scripts[el].name}.json')
+                            .deleteSync();
                         loadScripts();
                       }),
                     ))
@@ -209,8 +219,10 @@ class _AppState extends State<App> {
                     child: Column(
                   children: [
                     _RowHeader('Моделі', () async {
-                      final typeGroup = XTypeGroup(extensions: ['dll']);
-                      final file = await openFile(acceptedTypeGroups: [typeGroup]);
+                      final typeGroup =
+                          XTypeGroup(extensions: ['dll', 'so', 'dylib']);
+                      final file =
+                          await openFile(acceptedTypeGroups: [typeGroup]);
 
                       if (file == null) {
                         return;
@@ -219,7 +231,8 @@ class _AppState extends State<App> {
                       Hive.box<PModel>('models').add(PModel(
                           path: file.path,
                           lastModified: await file.lastModified(),
-                          size: double.parse((await file.length() / 1000000).toStringAsFixed(4))));
+                          size: double.parse((await file.length() / 1000000)
+                              .toStringAsFixed(4))));
 
                       loadModels();
                     }),
@@ -230,7 +243,8 @@ class _AppState extends State<App> {
                         child: ListView.builder(
                       physics: const BouncingScrollPhysics(),
                       itemCount: models.length,
-                      itemBuilder: (ctx, el) => PModelCard(models[el], scripts, () async {
+                      itemBuilder: (ctx, el) =>
+                          PModelCard(models[el], scripts, () async {
                         await Hive.box<PModel>('models').deleteAt(el);
                         loadModels();
                       }),
@@ -266,7 +280,8 @@ class _AppState extends State<App> {
               width: 280,
               decoration: BoxDecoration(
                 color: Colors.blueGrey.shade50,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(10)),
               ),
               padding: const EdgeInsets.all(14),
               child: Row(
@@ -275,11 +290,16 @@ class _AppState extends State<App> {
                   ScalableButton(
                     scale: ScaleFormat.big,
                     onPressed: () {
-                      Process.run('explorer.exe', ['storage\\log.txt']);
+                      if (Platform.isWindows) {
+                        Process.run('explorer.exe', ['storage\\log.txt']);
+                      } else {
+                        Process.run('xdg-open', ['storage/log.txt']);
+                      }
                     },
                     child: Text(
                       '> відкрити лог',
-                      style: GoogleFonts.rubik(fontSize: 12, color: Colors.blueGrey.shade900),
+                      style: GoogleFonts.rubik(
+                          fontSize: 12, color: Colors.blueGrey.shade900),
                     ),
                   ),
                   ScalableButton(
@@ -291,7 +311,8 @@ class _AppState extends State<App> {
                       children: [
                         Text(
                           'compiled',
-                          style: GoogleFonts.rubik(fontSize: 12, color: Colors.blueGrey.shade700),
+                          style: GoogleFonts.rubik(
+                              fontSize: 12, color: Colors.blueGrey.shade700),
                         ),
                         const SizedBox(
                           width: 6,
@@ -343,7 +364,8 @@ class _RowHeader extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.grey.shade700..withOpacity(0.6)),
+                      border: Border.all(
+                          color: Colors.grey.shade700..withOpacity(0.6)),
                     ),
                     padding: const EdgeInsets.all(8),
                     child: SvgPicture.asset('assets/icons/icon_add.svg'),

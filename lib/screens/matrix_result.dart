@@ -61,7 +61,13 @@ class MatrixResultScreen extends StatelessWidget {
                   ScalableButton(
                     scale: ScaleFormat.big,
                     onPressed: () {
-                      Process.run('explorer.exe', ['/select,', 'storage\\history\\${model.fileName}']);
+                      if (Platform.isWindows) {
+                        Process.run('explorer.exe', ['/select,', 'storage\\history\\${model.fileName}']);
+
+
+                      } else {
+                        Process.run('xdg-open', ['storage/history']);
+                      }
                     },
                     child: Text(
                       '.json',
@@ -139,11 +145,11 @@ class MatrixResultScreen extends StatelessWidget {
                     physics: const BouncingScrollPhysics(),
                     padding: const EdgeInsets.symmetric(vertical: 24),
                     children: [
-                      StatsCard(title: 'Час отримання даних із мережі', dataType: 'с', stats: model.timeToAcquireDate),
+                      StatsCard(title: 'Час отримання даних із мережі', dataType: 'с', stats: model.result.operationTimeStats),
                       const SizedBox(height: 22),
-                      StatsCard(title: 'Кількість задіяних вузлів при отриманні даних', dataType: '', stats: model.amountOfUsedNodes),
+                      StatsCard(title: 'Кількість задіяних вузлів при отриманні даних', dataType: '', stats: model.result.usedNodesStats),
                       const SizedBox(height: 22),
-                      StatsCard(title: 'Дані збережені кожним вузлом', dataType: 'Mb', stats: model.usedMemory),
+                      StatsCard(title: 'Дані, збережені кожним вузлом', dataType: 'Mb', stats: model.result.storageHistoryStats),
                       const SizedBox(height: 22),
                       Column(
                         children: [
@@ -155,7 +161,7 @@ class MatrixResultScreen extends StatelessWidget {
                           Column(
                             children: [
                               Text(
-                                '${(model.dataNotFound * 100).toStringAsFixed(4)} %',
+                                '${(model.result.fileNotFound * 100).toStringAsFixed(4)} %',
                                 style: GoogleFonts.rubik(fontSize: 16, color: Colors.grey.shade100),
                               ),
                             ],

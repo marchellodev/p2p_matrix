@@ -81,24 +81,23 @@ class ScriptModel {
       final randomNode = rand.nextInt(nodes - 1) + 1;
 
       if (!nodesTurnedOn.contains(randomNode)) {
-
         if (nodesTurnedOn.isNotEmpty &&
             nodesMap[randomNode].bootstrap == null) {
           nodesTurnedOn.shuffle(rand);
           nodesMap[randomNode].bootstrap = nodesTurnedOn.first;
         }
-        if(nodesTurnedOn.isEmpty){
+        if (nodesTurnedOn.isEmpty) {
           nodesMap[randomNode].bootstrap = -1;
         }
 
         nodesTurnedOn.add(randomNode);
-        _bootstrapActions.add(ScriptElementNodeAction(nodeId: randomNode, action: 'on'));
+        _bootstrapActions
+            .add(ScriptElementNodeAction(nodeId: randomNode, action: 'on'));
       }
     }
 
-    story.add(ScriptStoryElement(
-        nodeActions: _bootstrapActions,
-        operations: []));
+    story.add(
+        ScriptStoryElement(nodeActions: _bootstrapActions, operations: []));
 
     // story.add(ScriptStoryElement(nodeActions: {
     //   for (var el in nodesTurnedOn) el: ScriptElementNodeAction.on
@@ -142,7 +141,6 @@ class ScriptModel {
           nodesTurnedOn.add(randomNode);
           nodeActions
               .add(ScriptElementNodeAction(nodeId: randomNode, action: 'on'));
-
 
           // nodeActions[randomNode] = ScriptElementNodeAction.on;;
         }
@@ -333,8 +331,12 @@ class ScriptModelCard extends StatelessWidget {
               const Spacer(),
               ScalableButton(
                   onPressed: () {
-                    Process.run('explorer.exe',
-                        ['/select,', 'storage\\scripts\\${model.name}.json']);
+                    if (Platform.isWindows) {
+                      Process.run('explorer.exe',
+                          ['/select,', 'storage\\scripts\\${model.name}.json']);
+                    } else {
+                      Process.run('xdg-open', ['storage/scripts']);
+                    }
                   },
                   scale: ScaleFormat.big,
                   child: Container(

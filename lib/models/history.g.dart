@@ -19,22 +19,10 @@ HistoryModel _$HistoryModelFromJson(Map<String, dynamic> json) {
     historyDate: json['historyDate'] == null
         ? null
         : DateTime.parse(json['historyDate'] as String),
-    timeToAcquireDate: json['timeToAcquireDate'] == null
-        ? null
-        : HistoryStats.fromJson(
-            json['timeToAcquireDate'] as Map<String, dynamic>),
-    amountOfUsedNodes: json['amountOfUsedNodes'] == null
-        ? null
-        : HistoryStats.fromJson(
-            json['amountOfUsedNodes'] as Map<String, dynamic>),
-    usedMemory: json['usedMemory'] == null
-        ? null
-        : HistoryStats.fromJson(json['usedMemory'] as Map<String, dynamic>),
-    dataNotFound: (json['dataNotFound'] as num)?.toDouble(),
     fileName: json['fileName'] as String,
-    used: (json['used'] as List)?.map((e) => e as int)?.toList(),
-    mem: (json['mem'] as List)?.map((e) => (e as num)?.toDouble())?.toList(),
-    time: (json['time'] as List)?.map((e) => (e as num)?.toDouble())?.toList(),
+    result: json['result'] == null
+        ? null
+        : ResultModel.fromJson(json['result'] as Map<String, dynamic>),
   );
 }
 
@@ -47,14 +35,8 @@ Map<String, dynamic> _$HistoryModelToJson(HistoryModel instance) =>
       'modelCreated': instance.modelCreated?.toIso8601String(),
       'modelSize': instance.modelSize,
       'historyDate': instance.historyDate?.toIso8601String(),
-      'timeToAcquireDate': instance.timeToAcquireDate?.toJson(),
-      'amountOfUsedNodes': instance.amountOfUsedNodes?.toJson(),
-      'usedMemory': instance.usedMemory?.toJson(),
-      'dataNotFound': instance.dataNotFound,
       'fileName': instance.fileName,
-      'used': instance.used,
-      'mem': instance.mem,
-      'time': instance.time,
+      'result': instance.result?.toJson(),
     };
 
 HistoryStats _$HistoryStatsFromJson(Map<String, dynamic> json) {
@@ -72,4 +54,29 @@ Map<String, dynamic> _$HistoryStatsToJson(HistoryStats instance) =>
       'median': instance.median,
       'range': instance.range,
       'standardDeviation': instance.standardDeviation,
+    };
+
+ResultModel _$ResultModelFromJson(Map<String, dynamic> json) {
+  return ResultModel(
+    storageHistoryStats: json['storageHistoryStats'] == null
+        ? null
+        : HistoryStats.fromJson(
+            json['storageHistoryStats'] as Map<String, dynamic>),
+    usedNodesStats: json['usedNodesStats'] == null
+        ? null
+        : HistoryStats.fromJson(json['usedNodesStats'] as Map<String, dynamic>),
+    operationTimeStats: json['operationTimeStats'] == null
+        ? null
+        : HistoryStats.fromJson(
+            json['operationTimeStats'] as Map<String, dynamic>),
+    fileNotFound: (json['fileNotFound'] as num)?.toDouble(),
+  );
+}
+
+Map<String, dynamic> _$ResultModelToJson(ResultModel instance) =>
+    <String, dynamic>{
+      'storageHistoryStats': instance.storageHistoryStats?.toJson(),
+      'usedNodesStats': instance.usedNodesStats?.toJson(),
+      'operationTimeStats': instance.operationTimeStats?.toJson(),
+      'fileNotFound': instance.fileNotFound,
     };

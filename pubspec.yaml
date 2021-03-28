@@ -22,7 +22,9 @@ dependencies:
   select_dialog: ^2.0.0
 
   file_selector: ^0.8.2
+  file_selector_linux: ^0.0.2
   file_selector_windows: ^0.0.2
+  file_selector_macos: ^0.0.4
 
   hive: ^2.0.0
 

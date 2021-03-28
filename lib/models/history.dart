@@ -16,17 +16,9 @@ class HistoryModel {
   final DateTime modelCreated;
   final double modelSize;
   final DateTime historyDate;
-
-  final HistoryStats timeToAcquireDate;
-  final HistoryStats amountOfUsedNodes;
-  final HistoryStats usedMemory;
-  final double dataNotFound;
-
   final String fileName;
 
-  final List<int> used;
-  final List<double> mem;
-  final List<double> time;
+  final ResultModel result;
 
   HistoryModel({
     @required this.scriptName,
@@ -36,17 +28,12 @@ class HistoryModel {
     @required this.modelCreated,
     @required this.modelSize,
     @required this.historyDate,
-    @required this.timeToAcquireDate,
-    @required this.amountOfUsedNodes,
-    @required this.usedMemory,
-    @required this.dataNotFound,
     @required this.fileName,
-    @required this.used,
-    @required this.mem,
-    @required this.time,
+    @required this.result,
   });
 
-  factory HistoryModel.fromJson(Map<String, dynamic> json) => _$HistoryModelFromJson(json);
+  factory HistoryModel.fromJson(Map<String, dynamic> json) =>
+      _$HistoryModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$HistoryModelToJson(this);
 }
@@ -65,9 +52,32 @@ class HistoryStats {
     @required this.standardDeviation,
   });
 
-  factory HistoryStats.fromJson(Map<String, dynamic> json) => _$HistoryStatsFromJson(json);
+  factory HistoryStats.fromJson(Map<String, dynamic> json) =>
+      _$HistoryStatsFromJson(json);
 
   Map<String, dynamic> toJson() => _$HistoryStatsToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ResultModel {
+  final HistoryStats storageHistoryStats;
+  final HistoryStats usedNodesStats;
+  final HistoryStats operationTimeStats;
+
+  final double fileNotFound;
+
+  const ResultModel({
+    @required this.storageHistoryStats,
+    @required this.usedNodesStats,
+    @required this.operationTimeStats,
+    @required this.fileNotFound,
+  });
+
+
+  factory ResultModel.fromJson(Map<String, dynamic> json) =>
+      _$ResultModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ResultModelToJson(this);
 }
 
 class HistoryModelCard extends StatelessWidget {
@@ -79,7 +89,8 @@ class HistoryModelCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScalableButton(
       onPressed: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => MatrixResultScreen(model)));
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (ctx) => MatrixResultScreen(model)));
       },
       scale: ScaleFormat.small,
       child: Container(
@@ -93,13 +104,15 @@ class HistoryModelCard extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.blueGrey.shade100,
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(6)),
                   ),
                   padding: const EdgeInsets.all(8),
                   width: double.infinity,
                   child: Text(
                     model.modelName,
-                    style: GoogleFonts.rubik(color: Colors.blueGrey.shade800, fontSize: 12),
+                    style: GoogleFonts.rubik(
+                        color: Colors.blueGrey.shade800, fontSize: 12),
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -107,12 +120,14 @@ class HistoryModelCard extends StatelessWidget {
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: Colors.blueGrey.shade100,
-                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(6)),
+                    borderRadius:
+                        const BorderRadius.vertical(bottom: Radius.circular(6)),
                   ),
                   width: double.infinity,
                   child: Text(
                     model.scriptName,
-                    style: GoogleFonts.rubik(color: Colors.blueGrey.shade800, fontSize: 12),
+                    style: GoogleFonts.rubik(
+                        color: Colors.blueGrey.shade800, fontSize: 12),
                   ),
                 ),
               ],
@@ -121,12 +136,15 @@ class HistoryModelCard extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: Colors.blueGrey.shade200),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: Colors.blueGrey.shade200),
                   padding: const EdgeInsets.all(3.4),
                   margin: const EdgeInsets.all(8),
                   child: Text(
                     DateFormat('yyyy-MM-dd hh:mm:ss').format(model.historyDate),
-                    style: GoogleFonts.rubik(color: Colors.blueGrey.shade700, fontSize: 10),
+                    style: GoogleFonts.rubik(
+                        color: Colors.blueGrey.shade700, fontSize: 10),
                   ),
                 ),
               ),
