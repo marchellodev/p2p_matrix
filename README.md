@@ -17,7 +17,7 @@ flutter run
 
 ## Utilities
 
-To regenerate `.g.dart` files (for serialization and HiveDB):
+To Run the code generation tool for `.g.dart` files (for serialization and HiveDB):
 
 ```shell
 flutter packages pub run build_runner build --delete-conflicting-outputs
